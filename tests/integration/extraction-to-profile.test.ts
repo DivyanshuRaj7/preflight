@@ -1,8 +1,6 @@
 import { describe, expect, it } from "vitest";
-import {
-  DeterministicStubExtractionProvider,
-  loadStubDocumentsFromFile,
-} from "../../src/adapters/extraction/stub.js";
+import { DeterministicStubExtractionProvider } from "../../src/adapters/extraction/stub.js";
+import { loadStubDocumentsFromFile } from "../../src/adapters/extraction/stub-files.js";
 import { assembleApplicantProfile } from "../../src/domain/profile/assemble.js";
 import { validateProfile } from "../../src/domain/validation/preflight.js";
 import type { DocumentType } from "../../src/domain/contracts.js";

@@ -1,4 +1,3 @@
-import { readFileSync } from "node:fs";
 import type { DocumentType } from "../../domain/contracts.js";
 import type {
   DocumentInput,
@@ -10,7 +9,9 @@ import type {
 
 // Deterministic synthetic extraction stub (TASK-002). Scenario behavior comes
 // from injected fixture configuration, not from hard-coded branches. No
-// randomness, no timestamps, no network calls. This stub answers
+// randomness, no timestamps, no network calls, no Node APIs — this module is
+// browser-safe so the React UI can run the real provider. File loading lives
+// in ./stub-files.js (Node only). This stub answers
 // "What did we extract?" — it performs no validation.
 
 export const STUB_PROVIDER_NAME = "deterministic-stub";
@@ -43,10 +44,6 @@ export function parseStubDocuments(jsonText: string): Record<string, StubDocumen
     throw new Error("Invalid stub documents file: expected { version, documents }");
   }
   return parsed.documents;
-}
-
-export function loadStubDocumentsFromFile(filePath: string): Record<string, StubDocument> {
-  return parseStubDocuments(readFileSync(filePath, "utf8"));
 }
 
 function statusFor(condition: StubCondition): ExtractionStatus {

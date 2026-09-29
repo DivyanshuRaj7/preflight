@@ -70,7 +70,7 @@ Definition of done:
 Do not start until TASK-001 is green.
 
 ## TASK-003 — Validation engine
-**Status:** IN PROGRESS (current task)
+**Status:** DONE
 
 Scope:
 - Deterministic READY/BLOCKED validation engine over profile + evidence.
@@ -93,7 +93,29 @@ Definition of done:
 - `npm run check`, `npm run test`, `npm run eval` are green.
 
 ## TASK-004 — Preflight UI
-**Status:** TODO
+**Status:** IN PROGRESS (current task)
+
+Scope:
+- React + Vite + TypeScript frontend in `src/ui/` (DESIGN.md is the visual
+  source of truth).
+- Application shell: TopBar, SideNav, StatusHeader, FindingList,
+  EvidencePanel, DocumentList, StatusBadge.
+- Synthetic case selection (CASE-001..CASE-008) with a Run Preflight action.
+- Live domain pipeline in the browser: fixture documents → real
+  ExtractionProvider → real assembler → real validation engine.
+- Findings, evidence, remediation, and documents rendered verbatim from
+  domain output; case switching clears stale state.
+- Frontend tests in `tests/ui/`; responsive + accessible per DESIGN.md.
+
+Non-goals (later tasks):
+- Playwright, browser automation, synthetic portal, real OCR/LLM,
+  authentication, payments, database, deployment, approval/submission
+  execution (UI shows READY only; it never submits).
+
+Definition of done:
+- All 8 cases render actual domain results; no invented findings.
+- `npm run check`, `npm run test`, `npm run eval` are green.
+- `npm run dev` serves the UI locally.
 
 ## TASK-005 — Synthetic portal
 **Status:** TODO

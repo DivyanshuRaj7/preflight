@@ -35,6 +35,8 @@ Then read `TASKS.md`. Do not ask the coding agent to build the entire product at
 - `npm run check` — TypeScript checks.
 - `npm run test` — unit/integration tests.
 - `npm run eval` — fixture evaluation.
+- `npm run dev` — start the Preflight UI locally (Vite).
+- `npm run build` — production build of the UI into `dist/`.
 - `npm run demo:reset` — reset local synthetic demo state.
 
 ## AI disclosure

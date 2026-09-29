@@ -19,6 +19,9 @@
     { "id": "ev-identity-dob", "documentId": "doc-identity", "documentType": "identity", "page": 1, "field": "dateOfBirth", "text": "2004-05-17", "bbox": [20, 90, 300, 115], "extractionMethod": "synthetic", "confidence": 1.0 },
     { "id": "ev-bank-address", "documentId": "doc-bank-proof", "documentType": "bank-proof", "page": 1, "field": "address", "text": "14 Lake Road, Kolkata 700029", "bbox": [20, 130, 420, 160], "extractionMethod": "synthetic", "confidence": 1.0 },
     { "id": "ev-application-address", "documentId": "doc-scholarship-application", "documentType": "scholarship-application", "page": 1, "field": "address", "text": "9 Park Street, Kolkata 700016", "bbox": [40, 70, 400, 95], "extractionMethod": "synthetic", "confidence": 0.99 },
-    { "id": "ev-income-expiry", "documentId": "doc-income-certificate", "documentType": "income-certificate", "page": 1, "field": "expiryDate", "text": "2027-03-31", "bbox": [20, 40, 380, 70], "extractionMethod": "synthetic", "confidence": 1.0 }
+    { "id": "ev-income-expiry", "documentId": "doc-income-certificate", "documentType": "income-certificate", "page": 1, "field": "expiryDate", "text": "2027-03-31", "bbox": [20, 40, 380, 70], "extractionMethod": "synthetic", "confidence": 1.0 },
+    { "id": "ev-marksheet-name", "documentId": "doc-marksheet", "documentType": "marksheet", "page": 1, "field": "name", "text": "Rina Das", "bbox": [30, 20, 360, 45], "extractionMethod": "synthetic", "confidence": 1.0 },
+    { "id": "ev-marksheet-dob", "documentId": "doc-marksheet", "documentType": "marksheet", "page": 1, "field": "dateOfBirth", "text": "2004-05-17", "bbox": [30, 50, 320, 80], "extractionMethod": "synthetic", "confidence": 1.0 },
+    { "id": "ev-application-name", "documentId": "doc-scholarship-application", "documentType": "scholarship-application", "page": 1, "field": "name", "text": "Rina Das", "bbox": [40, 30, 380, 55], "extractionMethod": "synthetic", "confidence": 1.0 }
   ]
 }
