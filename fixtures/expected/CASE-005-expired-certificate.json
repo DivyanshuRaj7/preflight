@@ -1,0 +1,1 @@
+{"id":"CASE-005-expired-certificate","expectedPreflight":"BLOCKED","expectedFindingIds":["DOCUMENT_EXPIRY"]}

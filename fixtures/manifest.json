@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "cases": [
+    { "id": "CASE-001-clean", "profile": "clean", "expectedFile": "CASE-001-clean.json" },
+    { "id": "CASE-002-name-mismatch", "profile": "name-mismatch", "expectedFile": "CASE-002-name-mismatch.json" },
+    { "id": "CASE-003-dob-mismatch", "profile": "dob-mismatch", "expectedFile": "CASE-003-dob-mismatch.json" },
+    { "id": "CASE-004-missing-income-certificate", "profile": "missing-income-certificate", "expectedFile": "CASE-004-missing-income-certificate.json" },
+    { "id": "CASE-005-expired-certificate", "profile": "expired-certificate", "expectedFile": "CASE-005-expired-certificate.json" },
+    { "id": "CASE-006-low-confidence-extraction", "profile": "low-confidence-extraction", "expectedFile": "CASE-006-low-confidence-extraction.json" }
+  ]
+}
