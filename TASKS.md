@@ -13,7 +13,7 @@ For each task:
 7. Only then should the human move to the next task.
 
 ## TASK-001 — Domain contracts + safety invariants
-**Status:** READY FOR CHECKPOINT
+**Status:** DONE
 
 Scope:
 - Define canonical domain types.
@@ -46,7 +46,26 @@ Checkpoint:
 `feat: establish preflight domain contracts`
 
 ## TASK-002 — Deterministic extraction adapter + profile assembly
-**Status:** TODO
+**Status:** IN PROGRESS (current task)
+
+Scope:
+- Define the stable `ExtractionProvider` contract in domain code.
+- Implement `DeterministicStubExtractionProvider` driven by fixture scenario data.
+- Support SUCCESS / PARTIAL / FAILED / LOW_CONFIDENCE without silent upgrades.
+- Preserve evidence provenance and confidence through extraction.
+- Assemble extraction results into profile/domain input without validation policy.
+- Cover with unit tests plus an extraction-to-profile integration test.
+
+Non-goals (belong to TASK-003 or later):
+- name / DOB mismatch detection, confidence threshold policy,
+  missing-document / expiry validation, real OCR/LLM integration, UI,
+  portal, Playwright, database, authentication.
+
+Definition of done:
+- ExtractionProvider contract exists; stub is deterministic and fixture-driven.
+- Provenance and confidence survive extraction; FAILED yields no facts.
+- No validation policy lives in extraction.
+- `npm run check`, `npm run test`, `npm run eval` are green.
 
 Do not start until TASK-001 is green.
 

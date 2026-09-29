@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "documents": {
+    "doc-identity": {
+      "documentType": "identity",
+      "condition": "ok",
+      "fields": {
+        "name": { "text": "Rina Das", "confidence": 1.0, "page": 1, "bbox": [20, 40, 400, 70] },
+        "dateOfBirth": { "text": "2004-05-17", "confidence": 1.0, "page": 1, "bbox": [20, 90, 300, 115] }
+      }
+    },
+    "doc-marksheet": {
+      "documentType": "marksheet",
+      "condition": "ok",
+      "fields": {
+        "name": { "text": "Rina Das", "confidence": 1.0, "page": 1, "bbox": [30, 20, 360, 45] },
+        "dateOfBirth": { "text": "2004-05-17", "confidence": 1.0, "page": 1, "bbox": [30, 50, 320, 80] }
+      }
+    },
+    "doc-income-certificate": {
+      "documentType": "income-certificate",
+      "condition": "ok",
+      "fields": {
+        "expiryDate": { "text": "2027-03-31", "confidence": 1.0, "page": 1, "bbox": [20, 40, 380, 70] }
+      }
+    },
+    "doc-bank-proof": {
+      "documentType": "bank-proof",
+      "condition": "ok",
+      "fields": {
+        "name": { "text": "Rina Das", "confidence": 1.0, "page": 1, "bbox": [20, 60, 400, 85] },
+        "address": { "text": "14 Lake Road, Kolkata 700029", "confidence": 1.0, "page": 1, "bbox": [20, 130, 420, 160] }
+      }
+    },
+    "doc-scholarship-application": {
+      "documentType": "scholarship-application",
+      "condition": "ok",
+      "fields": {
+        "name": { "text": "Rina Das", "confidence": 1.0, "page": 1, "bbox": [40, 30, 380, 55] }
+      }
+    },
+    "doc-marksheet-partial": {
+      "documentType": "marksheet",
+      "condition": "partial",
+      "fields": {
+        "name": { "text": "Rina Das", "confidence": 0.98, "page": 1, "bbox": [30, 20, 360, 45] }
+      },
+      "missingFields": ["dateOfBirth"]
+    },
+    "doc-income-unreadable": {
+      "documentType": "income-certificate",
+      "condition": "failed",
+      "fields": {},
+      "error": { "code": "DOCUMENT_UNREADABLE", "message": "Document is not machine-readable in this scenario." }
+    },
+    "doc-identity-faint": {
+      "documentType": "identity",
+      "condition": "low-confidence",
+      "fields": {
+        "name": { "text": "Rina Das", "confidence": 0.42, "page": 1, "bbox": [20, 40, 400, 70] },
+        "dateOfBirth": { "text": "2004-05-17", "confidence": 0.51, "page": 1, "bbox": [20, 90, 300, 115] }
+      }
+    }
+  }
+}
