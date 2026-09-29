@@ -1,1 +1,22 @@
-{"evidence": [{"bbox": [20, 40, 400, 70], "confidence": 1.0, "documentId": "doc-identity", "extractionMethod": "synthetic", "field": "name", "id": "ev-identity-name", "page": 1, "text": "Rina Das"}, {"bbox": [20, 90, 300, 115], "confidence": 1.0, "documentId": "doc-identity", "extractionMethod": "synthetic", "field": "dateOfBirth", "id": "ev-identity-dob", "page": 1, "text": "2004-05-17"}, {"bbox": [30, 50, 320, 80], "confidence": 0.97, "documentId": "doc-marksheet", "extractionMethod": "synthetic", "field": "dateOfBirth", "id": "ev-marksheet-dob", "page": 1, "text": "2005-05-17"}], "id": "CASE-003-dob-mismatch", "profile": {"dateOfBirth": {"evidenceIds": ["ev-identity-dob", "ev-marksheet-dob"], "value": "2004-05-17"}, "name": {"evidenceIds": ["ev-identity-name"], "value": "Rina Das"}, "requiredDocuments": {"bank-proof": "present", "identity": "present", "income-certificate": "present", "marksheet": "present", "scholarship-application": "present"}, "version": "v1"}, "scenario": "dob-mismatch"}
+{
+  "id": "CASE-003-dob-mismatch",
+  "scenario": "dob-mismatch",
+  "profile": {
+    "name": { "value": "Rina Das", "evidenceIds": ["ev-identity-name"] },
+    "dateOfBirth": { "value": "2004-05-17", "evidenceIds": ["ev-identity-dob", "ev-marksheet-dob"] },
+    "requiredDocuments": {
+      "identity": "present",
+      "marksheet": "present",
+      "income-certificate": "present",
+      "bank-proof": "present",
+      "scholarship-application": "present"
+    },
+    "version": "v1"
+  },
+  "evidence": [
+    { "id": "ev-identity-name", "documentId": "doc-identity", "documentType": "identity", "page": 1, "field": "name", "text": "Rina Das", "bbox": [20, 40, 400, 70], "extractionMethod": "synthetic", "confidence": 1.0 },
+    { "id": "ev-identity-dob", "documentId": "doc-identity", "documentType": "identity", "page": 1, "field": "dateOfBirth", "text": "2004-05-17", "bbox": [20, 90, 300, 115], "extractionMethod": "synthetic", "confidence": 1.0 },
+    { "id": "ev-marksheet-dob", "documentId": "doc-marksheet", "documentType": "marksheet", "page": 1, "field": "dateOfBirth", "text": "2005-05-17", "bbox": [30, 50, 320, 80], "extractionMethod": "synthetic", "confidence": 0.97 },
+    { "id": "ev-income-expiry", "documentId": "doc-income-certificate", "documentType": "income-certificate", "page": 1, "field": "expiryDate", "text": "2027-03-31", "bbox": [20, 40, 380, 70], "extractionMethod": "synthetic", "confidence": 1.0 }
+  ]
+}

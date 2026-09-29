@@ -36,8 +36,24 @@ describe("extraction to profile chain", () => {
     expect(profile.name?.value).toBe("Rina Das");
     expect(profile.name?.evidenceIds.length).toBeGreaterThan(0);
 
-    const decision = validateProfile(profile, evidence, FIXED_NOW);
+    const decision = validateProfile(profile, evidence, { referenceDate: "2026-09-30", checkedAt: FIXED_NOW });
     expect(decision.status).toBe("READY");
+  });
+
+  it("blocks low-confidence extraction through the assembled profile", async () => {
+    const provider = new DeterministicStubExtractionProvider(
+      loadStubDocumentsFromFile("fixtures/extraction/documents.json"),
+    );
+    const result = await provider.extractDocument({ documentId: "doc-identity-faint" });
+    expect(result.status).toBe("LOW_CONFIDENCE");
+
+    const { profile, evidence } = assembleApplicantProfile([result], {
+      version: "v1",
+      requiredDocumentTypes: ["identity"],
+    });
+    const decision = validateProfile(profile, evidence, { referenceDate: "2026-09-30", checkedAt: FIXED_NOW });
+    expect(decision.status).toBe("BLOCKED");
+    expect(decision.issues.map((issue) => issue.ruleId)).toContain("LOW_CONFIDENCE_CRITICAL_FIELD");
   });
 
   it("carries PARTIAL extraction through without validation in the adapter", async () => {

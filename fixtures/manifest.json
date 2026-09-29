@@ -6,6 +6,8 @@
     { "id": "CASE-003-dob-mismatch", "profile": "dob-mismatch", "expectedFile": "CASE-003-dob-mismatch.json" },
     { "id": "CASE-004-missing-income-certificate", "profile": "missing-income-certificate", "expectedFile": "CASE-004-missing-income-certificate.json" },
     { "id": "CASE-005-expired-certificate", "profile": "expired-certificate", "expectedFile": "CASE-005-expired-certificate.json" },
-    { "id": "CASE-006-low-confidence-extraction", "profile": "low-confidence-extraction", "expectedFile": "CASE-006-low-confidence-extraction.json" }
+    { "id": "CASE-006-low-confidence-extraction", "profile": "low-confidence-extraction", "expectedFile": "CASE-006-low-confidence-extraction.json" },
+    { "id": "CASE-007-address-mismatch", "profile": "address-mismatch", "expectedFile": "CASE-007-address-mismatch.json" },
+    { "id": "CASE-008-combined-failures", "profile": "combined-failures", "expectedFile": "CASE-008-combined-failures.json" }
   ]
 }

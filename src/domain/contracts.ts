@@ -10,6 +10,7 @@ export type ExtractionMethod = "ocr" | "multimodal" | "manual" | "synthetic";
 export type Evidence = {
   id: string;
   documentId: string;
+  documentType?: DocumentType;
   page?: number;
   field?: string;
   text?: string;
@@ -38,6 +39,8 @@ export type Finding = {
   ruleId: string;
   severity: "critical" | "error" | "warning";
   message: string;
+  remediation: string;
+  field?: string;
   evidenceIds: string[];
   blocking: boolean;
 };

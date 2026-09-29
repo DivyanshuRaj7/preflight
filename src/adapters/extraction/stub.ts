@@ -130,6 +130,7 @@ export class DeterministicStubExtractionProvider implements ExtractionProvider {
     const evidence = Object.entries(stored.fields).map(([field, stub]) => ({
       id: `ev-${input.documentId}-${field}`,
       documentId: input.documentId,
+      documentType: stored.documentType,
       page: stub.page,
       field,
       text: stub.text,

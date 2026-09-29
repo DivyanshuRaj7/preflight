@@ -4,18 +4,12 @@ import path from "node:path";
 import { validateProfile } from "../src/domain/validation/preflight.js";
 import type { ApplicantProfile, Evidence } from "../src/domain/contracts.js";
 
-// TASK-001 evaluation: deterministic, no AI, no randomness.
-// Runs the domain preflight decision over every fixture case and compares
-// against the expected outcome. Rules owned by later tasks
-// (IDENTITY_NAME_MISMATCH, IDENTITY_DOB_MISMATCH, LOW_CONFIDENCE_EXTRACTION)
-// are reported as DEFERRED and do not fail this gate.
+// TASK-003 evaluation: deterministic, no AI, no randomness.
+// Runs the domain validation engine over every fixture case with an explicit
+// reference date and compares status plus finding IDs against ground truth.
+// Every manifest case is gated; nothing is deferred.
+const REFERENCE_DATE = "2026-09-30";
 const FIXED_NOW = "2026-09-30T00:00:00.000Z";
-const TASK_001_RULES = new Set([
-  "REQUIRED_DOCUMENT",
-  "DOCUMENT_EXPIRY",
-  "DOCUMENT_INVALID",
-  "EVIDENCE_PROVENANCE",
-]);
 
 type ManifestEntry = { id: string; profile: string; expectedFile: string };
 type Expected = { id: string; expectedPreflight: "READY" | "BLOCKED"; expectedFindingIds: string[] };
@@ -27,9 +21,7 @@ const manifest = JSON.parse(await readFile(path.join(root, "fixtures/manifest.js
   cases: ManifestEntry[];
 };
 
-let gated = 0;
-let gatedPass = 0;
-let deferred = 0;
+let passed = 0;
 const failures: string[] = [];
 
 for (const item of manifest.cases) {
@@ -42,25 +34,15 @@ for (const item of manifest.cases) {
   ) as CaseInput;
   if (input.id !== item.id) throw new Error(`Case input id mismatch: ${item.id}`);
 
-  const result = validateProfile(input.profile, input.evidence, FIXED_NOW);
+  const result = validateProfile(input.profile, input.evidence, {
+    referenceDate: REFERENCE_DATE,
+    checkedAt: FIXED_NOW,
+  });
   const actualRuleIds = result.issues.map((issue) => issue.ruleId);
-  const isDeferred = expected.expectedFindingIds.some((id) => !TASK_001_RULES.has(id));
-
-  if (isDeferred) {
-    deferred += 1;
-    console.log(
-      `DEFERRED ${item.id}: expected=${expected.expectedPreflight} ` +
-        `[${expected.expectedFindingIds.join(",")}] actual=${result.status} ` +
-        `[${actualRuleIds.join(",")}] (rule owned by a later task)`,
-    );
-    continue;
-  }
-
-  gated += 1;
   const statusOk = result.status === expected.expectedPreflight;
   const findingsOk = expected.expectedFindingIds.every((id) => actualRuleIds.includes(id));
   if (statusOk && findingsOk) {
-    gatedPass += 1;
+    passed += 1;
     console.log(`PASS ${item.id}: ${result.status} [${actualRuleIds.join(",")}]`);
   } else {
     failures.push(item.id);
@@ -72,7 +54,7 @@ for (const item of manifest.cases) {
 }
 
 console.log(`Fixture manifest check: ${manifest.cases.length}/${manifest.cases.length} cases valid.`);
-console.log(`TASK-001 gate: ${gatedPass}/${gated} passed, ${deferred} deferred to later tasks.`);
+console.log(`TASK-003 validation gate: ${passed}/${manifest.cases.length} passed.`);
 if (failures.length > 0) {
   console.error(`Evaluation failed for: ${failures.join(", ")}`);
   process.exit(1);

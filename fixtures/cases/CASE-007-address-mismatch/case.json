@@ -1,9 +1,10 @@
 {
-  "id": "CASE-002-name-mismatch",
-  "scenario": "name-mismatch",
+  "id": "CASE-007-address-mismatch",
+  "scenario": "address-mismatch",
   "profile": {
-    "name": { "value": "Rina Das", "evidenceIds": ["ev-identity-name", "ev-bank-name"] },
+    "name": { "value": "Rina Das", "evidenceIds": ["ev-identity-name"] },
     "dateOfBirth": { "value": "2004-05-17", "evidenceIds": ["ev-identity-dob"] },
+    "address": { "value": "14 Lake Road, Kolkata 700029", "evidenceIds": ["ev-bank-address", "ev-application-address"] },
     "requiredDocuments": {
       "identity": "present",
       "marksheet": "present",
@@ -15,8 +16,9 @@
   },
   "evidence": [
     { "id": "ev-identity-name", "documentId": "doc-identity", "documentType": "identity", "page": 1, "field": "name", "text": "Rina Das", "bbox": [20, 40, 400, 70], "extractionMethod": "synthetic", "confidence": 1.0 },
-    { "id": "ev-bank-name", "documentId": "doc-bank-proof", "documentType": "bank-proof", "page": 1, "field": "name", "text": "Rina Dey", "bbox": [20, 60, 400, 85], "extractionMethod": "synthetic", "confidence": 0.98 },
     { "id": "ev-identity-dob", "documentId": "doc-identity", "documentType": "identity", "page": 1, "field": "dateOfBirth", "text": "2004-05-17", "bbox": [20, 90, 300, 115], "extractionMethod": "synthetic", "confidence": 1.0 },
+    { "id": "ev-bank-address", "documentId": "doc-bank-proof", "documentType": "bank-proof", "page": 1, "field": "address", "text": "14 Lake Road, Kolkata 700029", "bbox": [20, 130, 420, 160], "extractionMethod": "synthetic", "confidence": 1.0 },
+    { "id": "ev-application-address", "documentId": "doc-scholarship-application", "documentType": "scholarship-application", "page": 1, "field": "address", "text": "9 Park Street, Kolkata 700016", "bbox": [40, 70, 400, 95], "extractionMethod": "synthetic", "confidence": 0.99 },
     { "id": "ev-income-expiry", "documentId": "doc-income-certificate", "documentType": "income-certificate", "page": 1, "field": "expiryDate", "text": "2027-03-31", "bbox": [20, 40, 380, 70], "extractionMethod": "synthetic", "confidence": 1.0 }
   ]
 }

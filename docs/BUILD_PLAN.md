@@ -28,3 +28,10 @@ A milestone is complete only when:
 - its documented contract is satisfied;
 - `npm run check` is green;
 - no unrelated refactor is included.
+
+## Milestone log
+
+- TASK-001: domain contracts, READY/BLOCKED decision, submission invariant.
+- TASK-002: extraction contract, deterministic stub, profile assembly.
+- TASK-003: deterministic validation engine (READY/BLOCKED over profile +
+  evidence with explicit reference date); all fixture cases gated in eval.

@@ -46,7 +46,7 @@ Checkpoint:
 `feat: establish preflight domain contracts`
 
 ## TASK-002 — Deterministic extraction adapter + profile assembly
-**Status:** IN PROGRESS (current task)
+**Status:** DONE
 
 Scope:
 - Define the stable `ExtractionProvider` contract in domain code.
@@ -70,7 +70,27 @@ Definition of done:
 Do not start until TASK-001 is green.
 
 ## TASK-003 — Validation engine
-**Status:** TODO
+**Status:** IN PROGRESS (current task)
+
+Scope:
+- Deterministic READY/BLOCKED validation engine over profile + evidence.
+- Rules: provenance, missing/invalid/expired documents, evidence-based
+  expiry with explicit reference date, name/DOB/address cross-document
+  agreement, low-confidence critical fields, combined failures.
+- Stable finding IDs with remediation and evidence references.
+- Fixture cases CASE-001..CASE-008 with ground-truth expectations.
+- Full gating in `npm run eval` (no deferred validation cases).
+
+Non-goals (later tasks):
+- UI, portal, Playwright, approval UI, failure injection, real OCR/LLM,
+  database, authentication, deployment, MCP.
+
+Definition of done:
+- Engine is pure: no clock, randomness, network, or environment dependence.
+- All 8 fixture cases evaluate to their expected outcomes.
+- Unit, integration, and eval tests cover every rule above.
+- Submission authorization invariant remains intact.
+- `npm run check`, `npm run test`, `npm run eval` are green.
 
 ## TASK-004 — Preflight UI
 **Status:** TODO

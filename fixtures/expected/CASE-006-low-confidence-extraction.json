@@ -1,1 +1,1 @@
-{"id":"CASE-006-low-confidence-extraction","expectedPreflight":"BLOCKED","expectedFindingIds":["LOW_CONFIDENCE_EXTRACTION"]}
+{"id":"CASE-006-low-confidence-extraction","expectedPreflight":"BLOCKED","expectedFindingIds":["LOW_CONFIDENCE_CRITICAL_FIELD"]}

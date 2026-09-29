@@ -113,7 +113,7 @@ describe("provider replaceability", () => {
       requiredDocumentTypes: ["identity"],
     });
     expect(profile.name?.value).toBe("Mock Person");
-    const decision = validateProfile(profile, evidence, "2026-09-30T00:00:00.000Z");
+    const decision = validateProfile(profile, evidence, { referenceDate: "2026-09-30", checkedAt: "2026-09-30T00:00:00.000Z" });
     expect(decision.status).toBe("READY");
   });
 });

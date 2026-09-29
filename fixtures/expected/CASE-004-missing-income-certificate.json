@@ -1,1 +1,1 @@
-{"id":"CASE-004-missing-income-certificate","expectedPreflight":"BLOCKED","expectedFindingIds":["REQUIRED_DOCUMENT"]}
+{"id":"CASE-004-missing-income-certificate","expectedPreflight":"BLOCKED","expectedFindingIds":["MISSING_REQUIRED_DOCUMENT"]}

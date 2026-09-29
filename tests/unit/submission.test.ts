@@ -5,7 +5,7 @@ import type { Approval, PortalRun, PortalRunState, PreflightResult } from "../..
 const ready: PreflightResult = { status: "READY", issues: [], checkedAt: "2026-09-30T00:00:00.000Z", profileVersion: "v1" };
 const blocked: PreflightResult = {
   status: "BLOCKED",
-  issues: [{ ruleId: "REQUIRED_DOCUMENT", severity: "error", message: "Required document missing: income-certificate", evidenceIds: [], blocking: true }],
+  issues: [{ ruleId: "MISSING_REQUIRED_DOCUMENT", severity: "error", message: "Required document missing: income-certificate.", remediation: "Provide the income-certificate document and re-run preflight.", evidenceIds: [], blocking: true }],
   checkedAt: "2026-09-30T00:00:00.000Z",
   profileVersion: "v1",
 };

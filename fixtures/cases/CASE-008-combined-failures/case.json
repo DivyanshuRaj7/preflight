@@ -1,13 +1,13 @@
 {
-  "id": "CASE-002-name-mismatch",
-  "scenario": "name-mismatch",
+  "id": "CASE-008-combined-failures",
+  "scenario": "combined-failures",
   "profile": {
     "name": { "value": "Rina Das", "evidenceIds": ["ev-identity-name", "ev-bank-name"] },
     "dateOfBirth": { "value": "2004-05-17", "evidenceIds": ["ev-identity-dob"] },
     "requiredDocuments": {
       "identity": "present",
       "marksheet": "present",
-      "income-certificate": "present",
+      "income-certificate": "missing",
       "bank-proof": "present",
       "scholarship-application": "present"
     },
@@ -16,7 +16,6 @@
   "evidence": [
     { "id": "ev-identity-name", "documentId": "doc-identity", "documentType": "identity", "page": 1, "field": "name", "text": "Rina Das", "bbox": [20, 40, 400, 70], "extractionMethod": "synthetic", "confidence": 1.0 },
     { "id": "ev-bank-name", "documentId": "doc-bank-proof", "documentType": "bank-proof", "page": 1, "field": "name", "text": "Rina Dey", "bbox": [20, 60, 400, 85], "extractionMethod": "synthetic", "confidence": 0.98 },
-    { "id": "ev-identity-dob", "documentId": "doc-identity", "documentType": "identity", "page": 1, "field": "dateOfBirth", "text": "2004-05-17", "bbox": [20, 90, 300, 115], "extractionMethod": "synthetic", "confidence": 1.0 },
-    { "id": "ev-income-expiry", "documentId": "doc-income-certificate", "documentType": "income-certificate", "page": 1, "field": "expiryDate", "text": "2027-03-31", "bbox": [20, 40, 380, 70], "extractionMethod": "synthetic", "confidence": 1.0 }
+    { "id": "ev-identity-dob", "documentId": "doc-identity", "documentType": "identity", "page": 1, "field": "dateOfBirth", "text": "2004-05-17", "bbox": [20, 90, 300, 115], "extractionMethod": "synthetic", "confidence": 1.0 }
   ]
 }
