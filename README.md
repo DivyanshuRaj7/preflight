@@ -2,7 +2,13 @@
 
 > Verify before you submit.
 
-Preflight is a BFWAI/HACK 26 PS-01 MVP: a reliability layer that validates a synthetic scholarship application before a browser agent submits it.
+![Preflight — Verify before you submit](docs/preflight-hero.svg)
+
+Preflight is a BFWAI/HACK 26 PS-01 MVP: a reliability layer for high-stakes digital applications. It validates a synthetic scholarship application, maps validated applicant data onto a local portal, executes the browser workflow, and independently verifies the resulting state before saving.
+
+[![synthetic data only](https://img.shields.io/badge/data-synthetic--only-informational)](docs/EVALUATION.md)
+[![deterministic validation](https://img.shields.io/badge/validation-deterministic-informational)](docs/CONTRACTS.md)
+[![no paid AI API](https://img.shields.io/badge/AI%20API-none%20required-informational)](docs/CONTRACTS.md)
 
 ## Quick start
 
@@ -11,38 +17,207 @@ npm install
 npm run check
 npm run test
 npm run eval
+npm run build
+npm run test:e2e
+```
+
+Playwright Chromium may need to be installed once on a fresh clone:
+
+```bash
+npx playwright install chromium
 ```
 
 Then read `TASKS.md`. Do not ask the coding agent to build the entire product at once.
 
 ## Project rules
+
 - Synthetic/generated data only.
 - AI is used for ambiguity; deterministic code owns correctness and authorization.
-- Submission requires explicit human approval tied to the exact reviewed state.
-- Unknown execution state is verified, never blindly retried.
+- Validation must pass before browser execution.
+- BLOCKED applications cannot execute.
+- AMBIGUOUS or UNMAPPED required fields cannot execute.
+- Browser actions are verified by reading the resulting DOM state.
+- Unknown execution states must be verified rather than blindly retried.
+- Final submission and human approval are intentionally outside the current execution milestone.
+
+## Current MVP
+
+The current vertical slice covers a synthetic scholarship renewal workflow:
+
+1. Synthetic documents are represented through deterministic fixtures.
+2. Evidence is assembled into a canonical applicant profile.
+3. Deterministic validation detects blocking inconsistencies.
+4. A READY profile can inspect the synthetic portal.
+5. Portal fields are mapped to canonical fields through the semantic mapping boundary.
+6. Playwright fills the mapped fields.
+7. Preflight reads the values back from the browser and compares them against expected values.
+8. Save Draft is allowed only after successful verification.
+9. The portal's SAVED state is independently verified.
+
+Final submission is not implemented yet.
+
+## Core architecture
+
+```text
+Synthetic Documents
+        ↓
+Extraction
+        ↓
+Canonical Applicant Profile
+        ↓
+Deterministic Validation
+        ↓
+   READY / BLOCKED
+        ↓
+Portal Inspection
+        ↓
+Semantic Field Mapping
+        ↓
+Execution Plan
+        ↓
+Playwright Browser Execution
+        ↓
+Independent Read-back
+        ↓
+Save Draft
+        ↓
+SAVED
+```
+
+Central principle: **AI for ambiguity. Code for correctness.**
+
+Semantic interpretation (what a portal label means) is isolated from deterministic validation, execution authorization, and state verification. A wrong confident interpretation can never silently become a trusted fact.
 
 ## Core documents
-- `PRD.md` — what we are building.
-- `ARCHITECTURE.md` — boundaries and state model.
+
+- `PRD.md` — product requirements and scope.
+- `ARCHITECTURE.md` — system boundaries and state model.
 - `docs/CONTRACTS.md` — stable domain interfaces and invariants.
-- `TASKS.md` — execution queue for the coding agent.
+- `TASKS.md` — implementation queue and completed milestones.
 - `docs/BUILD_PLAN.md` — implementation order.
 - `docs/RUNBOOK.md` — repeatable developer workflow.
-- `docs/EVALUATION.md` — measured evaluation only.
+- `docs/EVALUATION.md` — evaluation methodology and measured results.
 - `docs/DEMO.md` — fixed demo sequence.
 
 ## Commands
-- `npm run check` — TypeScript checks.
-- `npm run test` — unit/integration tests.
-- `npm run eval` — fixture evaluation.
-- `npm run dev` — start the Preflight UI locally (Vite).
-- `npm run build` — production build of the UI into `dist/`.
-- `npm run test:e2e` — Playwright browser smoke test (starts Vite automatically).
-- `npx playwright install chromium` — one-time browser install for a fresh clone.
+
+- `npm run check` — TypeScript type checks.
+- `npm test` — Vitest unit, integration, and UI tests.
+- `npm run eval` — deterministic fixture evaluation.
+- `npm run dev` — start the Preflight UI and synthetic portal locally.
+- `npm run build` — production build of the frontend into `dist/`.
+- `npm run test:e2e` — Playwright browser suite (starts Vite automatically).
+- `npm run test:e2e:headed` — same suite in a visible browser for debugging.
 - `npm run demo:reset` — reset local synthetic demo state.
 
-## AI disclosure
-Record every model, API, coding agent, and AI tool used during the challenge.
+## Project structure
+
+```text
+src/
+├── domain/
+│   ├── validation/
+│   ├── profile/
+│   ├── mapping/
+│   ├── execution/
+│   └── submission/
+├── adapters/
+│   ├── extraction/
+│   └── browser/
+├── portal/
+│   └── scholarship/
+└── ui/
+
+tests/
+├── unit/
+├── integration/
+├── ui/
+└── e2e/
+
+fixtures/
+docs/
+```
+
+## Safety boundaries
+
+Preflight deliberately separates interpretation from correctness-critical decisions.
+
+AI / semantic layer — used for:
+
+- document interpretation
+- ambiguous field meaning
+- semantic portal-field mapping
+
+Deterministic layer — owns:
+
+- validation
+- required-document checks
+- identity consistency
+- provenance
+- execution preconditions
+- mapping acceptance/rejection
+- expected-vs-observed verification
+- submission authorization
+
+The current implementation uses the deterministic baseline mapping and does not require a paid AI API.
 
 ## Evaluation
-Only measured results belong in the final results table. Never invent accuracy or recovery numbers.
+
+Evaluation uses deterministic synthetic cases. Current fixture evaluation: **8/8 PASS**.
+
+The final evaluation will measure things such as:
+
+- extraction accuracy
+- conflict detection
+- missing/invalid document handling
+- browser execution success
+- verification failures
+- recovery behavior
+- unsafe submission prevention
+
+Only measured results belong in the final results table. Never present targets as measured results.
+
+## Testing
+
+Current verified state:
+
+- Vitest: 94/94 PASS
+- Fixture evaluation: 8/8 PASS
+- Production build: PASS
+- Playwright E2E: 2/2 PASS
+
+The browser suite currently covers:
+
+- portal smoke test
+- six-field execution
+- independent read-back
+- SAVED state
+- zero Submit interaction
+
+## AI disclosure
+
+Record the AI models, APIs, coding agents, and AI tools used during the challenge. Current project development includes AI-assisted coding through OpenCode/Muse. Keep this section updated as the build progresses.
+
+## Current status
+
+Implemented:
+
+- deterministic document/extraction boundary
+- canonical applicant profile
+- deterministic validation
+- evidence/provenance handling
+- synthetic scholarship portal
+- Playwright browser infrastructure
+- semantic portal-field mapping
+- validated browser execution
+- independent read-back verification
+- Save Draft / SAVED verification
+
+Next milestone:
+
+- controlled browser failure handling
+- actual-state verification after failures
+- recovery vs escalation behavior
+
+## Demo
+
+See [docs/DEMO.md](docs/DEMO.md) for the fixed demo sequence. The demo uses synthetic data and deliberately planted failures.

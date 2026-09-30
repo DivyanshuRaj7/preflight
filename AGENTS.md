@@ -47,3 +47,5 @@ Use focused commits: `feat:`, `fix:`, `test:`, `docs:`, `chore:`. Never rewrite 
 
 ## Completion
 A task is not complete because files exist. It is complete only when its tests/checks pass and the requested behavior is reproducible.
+
+After every major checkpoint, ask: "Does README.md still describe what actually exists?" The workflow is BUILD → TEST → REVIEW → README UPDATE → GIT CHECKPOINT.

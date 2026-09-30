@@ -12,6 +12,7 @@
     "preview": "vite preview",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
+    "test:e2e:headed": "playwright test --headed",
     "demo:reset": "tsx scripts/demo-reset.ts"
   },
   "devDependencies": {
