@@ -8,6 +8,7 @@
     { "id": "CASE-005-expired-certificate", "profile": "expired-certificate", "expectedFile": "CASE-005-expired-certificate.json" },
     { "id": "CASE-006-low-confidence-extraction", "profile": "low-confidence-extraction", "expectedFile": "CASE-006-low-confidence-extraction.json" },
     { "id": "CASE-007-address-mismatch", "profile": "address-mismatch", "expectedFile": "CASE-007-address-mismatch.json" },
-    { "id": "CASE-008-combined-failures", "profile": "combined-failures", "expectedFile": "CASE-008-combined-failures.json" }
+    { "id": "CASE-008-combined-failures", "profile": "combined-failures", "expectedFile": "CASE-008-combined-failures.json" },
+    { "id": "CASE-009-contradictory-evidence", "profile": "contradictory-evidence", "expectedFile": "CASE-009-contradictory-evidence.json" }
   ]
 }

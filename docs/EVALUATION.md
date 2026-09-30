@@ -1,5 +1,9 @@
 # Evaluation
 
+Measured results live in `docs/EVALUATION_REPORT.md` (generated from
+`eval/results.json` via `npm run eval`). The sections below describe
+methodology; numbers live in the report, never the reverse.
+
 ## Dataset
 The evaluation suite is deterministic synthetic data with ground-truth expected outcomes in `fixtures/manifest.json` and `fixtures/expected/`.
 
@@ -23,6 +27,29 @@ Add portal drift and timeout to the execution/e2e suite when those layers exist.
 - Portal completion rate
 - Unsafe/unapproved submission prevention
 - Manual vs assisted completion time
+
+## Adversarial and boundary evaluation
+
+Beyond the manifest cases, `npm run eval` runs an adversarial gate over
+`fixtures/adversarial/cases.json`: ambiguous/unseen/unsupported portal
+labels must resolve to refusal (never to a match), and unexpected,
+missing, or stuck browser states must resolve to UNKNOWN or a confirmed
+miss — never to success.
+
+Evaluation must measure, separately:
+
+- correct success decisions (READY/VERIFIED on clean inputs)
+- correct block decisions (BLOCKED with the right rule)
+- correct recovery decisions (exactly one bounded retry, then verified)
+- correct escalation decisions (UNKNOWN preserved, no retry)
+- unsafe-submit prevention (no path from uncertainty to submission)
+- decision coverage across the failure taxonomy (`docs/FAILURE_COVERAGE.md`)
+
+Distinguish "handled correctly" from "recognized as outside supported
+coverage". The latter is a valid and desirable result: a system that
+reports UNSUPPORTED instead of guessing is working as designed. Never
+report unsupported coverage as 100%, and never present test counts as
+accuracy metrics.
 
 ## Rules
 - Never invent final numbers.

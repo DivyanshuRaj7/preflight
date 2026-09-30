@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "mappingCases": [
+    { "id": "ADV-006-ambiguous-label", "label": "Reference", "expectedStatus": "AMBIGUOUS", "expectedCanonical": null },
+    { "id": "ADV-007-unseen-label", "label": "Blockchain Wallet", "expectedStatus": "UNMAPPED", "expectedCanonical": null },
+    { "id": "ADV-011-unsupported-extra-field", "label": "Spouse Income", "expectedStatus": "UNMAPPED", "expectedCanonical": null },
+    { "id": "ADV-DRIFT-legal-name", "label": "Applicant Legal Name", "expectedStatus": "MATCHED", "expectedCanonical": "fullName" },
+    { "id": "ADV-EXACT-full-name", "label": "Full Name", "expectedStatus": "MATCHED", "expectedCanonical": "fullName" }
+  ],
+  "stateCases": [
+    { "id": "ADV-008-unexpected-portal-state", "observed": "SAVING…", "expected": "SAVED", "expectedVerdict": "UNKNOWN" },
+    { "id": "ADV-009-save-confirmation-unavailable", "observed": "", "expected": "SAVED", "expectedVerdict": "UNKNOWN" },
+    { "id": "ADV-010-post-submit-confirmation-unavailable", "observed": "SUBMITTING…", "expected": "SUBMITTED", "expectedVerdict": "UNKNOWN" },
+    { "id": "ADV-CONFIRMED-miss", "observed": "DRAFT", "expected": "SAVED", "expectedVerdict": "NOT_REACHED" },
+    { "id": "ADV-EXPECTED", "observed": "SAVED", "expected": "SAVED", "expectedVerdict": "EXPECTED_STATE" }
+  ]
+}

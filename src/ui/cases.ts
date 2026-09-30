@@ -7,6 +7,7 @@ import case005 from "../../fixtures/cases/CASE-005-expired-certificate/case.json
 import case006 from "../../fixtures/cases/CASE-006-low-confidence-extraction/case.json" with { type: "json" };
 import case007 from "../../fixtures/cases/CASE-007-address-mismatch/case.json" with { type: "json" };
 import case008 from "../../fixtures/cases/CASE-008-combined-failures/case.json" with { type: "json" };
+import case009 from "../../fixtures/cases/CASE-009-contradictory-evidence/case.json" with { type: "json" };
 import type { CaseInput } from "./pipeline.js";
 
 const byId: Record<string, unknown> = {
@@ -18,6 +19,7 @@ const byId: Record<string, unknown> = {
   "CASE-006-low-confidence-extraction": case006,
   "CASE-007-address-mismatch": case007,
   "CASE-008-combined-failures": case008,
+  "CASE-009-contradictory-evidence": case009,
 };
 
 function assertCaseInput(id: string, raw: unknown): CaseInput {

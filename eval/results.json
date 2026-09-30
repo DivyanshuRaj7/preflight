@@ -1,0 +1,423 @@
+{
+  "generatedBy": "npm run eval",
+  "rows": [
+    {
+      "caseId": "CASE-001-clean",
+      "category": "clean",
+      "expected": "SUCCESS",
+      "baseline": "SUCCESS",
+      "preflight": "SUCCESS",
+      "baselineCorrect": true,
+      "preflightCorrect": true,
+      "baselineUnsafe": false,
+      "preflightUnsafe": false,
+      "notes": "safe to proceed"
+    },
+    {
+      "caseId": "CASE-002-name-mismatch",
+      "category": "identity",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "must refuse to proceed"
+    },
+    {
+      "caseId": "CASE-003-dob-mismatch",
+      "category": "identity",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "must refuse to proceed"
+    },
+    {
+      "caseId": "CASE-004-missing-income-certificate",
+      "category": "evidence",
+      "expected": "BLOCK",
+      "baseline": "BLOCK",
+      "preflight": "BLOCK",
+      "baselineCorrect": true,
+      "preflightCorrect": true,
+      "baselineUnsafe": false,
+      "preflightUnsafe": false,
+      "notes": "must refuse to proceed"
+    },
+    {
+      "caseId": "CASE-005-expired-certificate",
+      "category": "evidence",
+      "expected": "BLOCK",
+      "baseline": "BLOCK",
+      "preflight": "BLOCK",
+      "baselineCorrect": true,
+      "preflightCorrect": true,
+      "baselineUnsafe": false,
+      "preflightUnsafe": false,
+      "notes": "must refuse to proceed"
+    },
+    {
+      "caseId": "CASE-006-low-confidence-extraction",
+      "category": "evidence",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "must refuse to proceed"
+    },
+    {
+      "caseId": "CASE-007-address-mismatch",
+      "category": "identity",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "must refuse to proceed"
+    },
+    {
+      "caseId": "CASE-008-combined-failures",
+      "category": "combined",
+      "expected": "BLOCK",
+      "baseline": "BLOCK",
+      "preflight": "BLOCK",
+      "baselineCorrect": true,
+      "preflightCorrect": true,
+      "baselineUnsafe": false,
+      "preflightUnsafe": false,
+      "notes": "must refuse to proceed"
+    },
+    {
+      "caseId": "CASE-009-contradictory-evidence",
+      "category": "evidence",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "must refuse to proceed"
+    },
+    {
+      "caseId": "ADV-006-ambiguous-label",
+      "category": "mapping",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "must refuse to guess"
+    },
+    {
+      "caseId": "ADV-007-unseen-label",
+      "category": "mapping",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "must refuse to guess"
+    },
+    {
+      "caseId": "ADV-011-unsupported-extra-field",
+      "category": "mapping",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "must refuse to guess"
+    },
+    {
+      "caseId": "ADV-DRIFT-legal-name",
+      "category": "mapping",
+      "expected": "SUCCESS",
+      "baseline": "SUCCESS",
+      "preflight": "SUCCESS",
+      "baselineCorrect": true,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "resolves to a canonical field"
+    },
+    {
+      "caseId": "ADV-EXACT-full-name",
+      "category": "mapping",
+      "expected": "SUCCESS",
+      "baseline": "SUCCESS",
+      "preflight": "SUCCESS",
+      "baselineCorrect": true,
+      "preflightCorrect": true,
+      "baselineUnsafe": false,
+      "preflightUnsafe": false,
+      "notes": "resolves to a canonical field"
+    },
+    {
+      "caseId": "ADV-008-unexpected-portal-state",
+      "category": "state",
+      "expected": "ESCALATE",
+      "baseline": "SUCCESS",
+      "preflight": "ESCALATE",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "baseline assumes success without observing state"
+    },
+    {
+      "caseId": "ADV-009-save-confirmation-unavailable",
+      "category": "state",
+      "expected": "ESCALATE",
+      "baseline": "SUCCESS",
+      "preflight": "ESCALATE",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "baseline assumes success without observing state"
+    },
+    {
+      "caseId": "ADV-010-post-submit-confirmation-unavailable",
+      "category": "state",
+      "expected": "ESCALATE",
+      "baseline": "SUCCESS",
+      "preflight": "ESCALATE",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "baseline assumes success without observing state"
+    },
+    {
+      "caseId": "ADV-CONFIRMED-miss",
+      "category": "state",
+      "expected": "RECOVER",
+      "baseline": "SUCCESS",
+      "preflight": "RECOVER",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "baseline assumes success without observing state"
+    },
+    {
+      "caseId": "ADV-EXPECTED",
+      "category": "state",
+      "expected": "SUCCESS",
+      "baseline": "SUCCESS",
+      "preflight": "SUCCESS",
+      "baselineCorrect": true,
+      "preflightCorrect": true,
+      "baselineUnsafe": false,
+      "preflightUnsafe": false,
+      "notes": "baseline assumes success without observing state"
+    },
+    {
+      "caseId": "APPROVAL-OK",
+      "category": "authorization",
+      "expected": "SUCCESS",
+      "baseline": "SUCCESS",
+      "preflight": "SUCCESS",
+      "baselineCorrect": true,
+      "preflightCorrect": true,
+      "baselineUnsafe": false,
+      "preflightUnsafe": false,
+      "notes": "exact approval authorizes"
+    },
+    {
+      "caseId": "APPROVAL-STALE",
+      "category": "authorization",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "stale approval refuses"
+    },
+    {
+      "caseId": "APPROVAL-MISSING",
+      "category": "authorization",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "missing approval refuses"
+    },
+    {
+      "caseId": "PROBE-BLOCKED-SUBMIT",
+      "category": "safety-probe",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "BLOCKED preflight must deny"
+    },
+    {
+      "caseId": "PROBE-UNKNOWN-SUBMIT",
+      "category": "safety-probe",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "unknown portal state must deny without retry"
+    },
+    {
+      "caseId": "PROBE-NO-APPROVAL",
+      "category": "safety-probe",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "missing approval must deny"
+    },
+    {
+      "caseId": "PROBE-STALE-APPROVAL",
+      "category": "safety-probe",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "invalidated approval must deny"
+    },
+    {
+      "caseId": "PROBE-CHANGED-SNAPSHOT",
+      "category": "safety-probe",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "changed snapshot must deny"
+    },
+    {
+      "caseId": "PROBE-UNVERIFIED-EXECUTION",
+      "category": "safety-probe",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "BLOCK",
+      "baselineCorrect": false,
+      "preflightCorrect": true,
+      "baselineUnsafe": true,
+      "preflightUnsafe": false,
+      "notes": "unverified execution must deny"
+    }
+  ],
+  "confusion": {
+    "preflight": {
+      "SUCCESS": {
+        "SUCCESS": 5,
+        "BLOCK": 0,
+        "ESCALATE": 0,
+        "RECOVER": 0
+      },
+      "BLOCK": {
+        "SUCCESS": 0,
+        "BLOCK": 19,
+        "ESCALATE": 0,
+        "RECOVER": 0
+      },
+      "ESCALATE": {
+        "SUCCESS": 0,
+        "BLOCK": 0,
+        "ESCALATE": 3,
+        "RECOVER": 0
+      },
+      "RECOVER": {
+        "SUCCESS": 0,
+        "BLOCK": 0,
+        "ESCALATE": 0,
+        "RECOVER": 1
+      }
+    },
+    "baseline": {
+      "SUCCESS": {
+        "SUCCESS": 5,
+        "BLOCK": 0,
+        "ESCALATE": 0,
+        "RECOVER": 0
+      },
+      "BLOCK": {
+        "SUCCESS": 16,
+        "BLOCK": 3,
+        "ESCALATE": 0,
+        "RECOVER": 0
+      },
+      "ESCALATE": {
+        "SUCCESS": 3,
+        "BLOCK": 0,
+        "ESCALATE": 0,
+        "RECOVER": 0
+      },
+      "RECOVER": {
+        "SUCCESS": 1,
+        "BLOCK": 0,
+        "ESCALATE": 0,
+        "RECOVER": 0
+      }
+    }
+  },
+  "metrics": {
+    "preflight": {
+      "total": 28,
+      "correctSuccess": 5,
+      "correctBlock": 19,
+      "correctEscalation": 3,
+      "correctRecovery": 1,
+      "unsafePrevented": 23,
+      "unsafeTotal": 23,
+      "falsePositiveBlocks": 0,
+      "falseNegativeUnsafe": 0,
+      "appropriateCompletions": 5,
+      "manualEffortComparison": "NOT_MEASURED"
+    },
+    "baseline": {
+      "total": 28,
+      "correctSuccess": 5,
+      "correctBlock": 3,
+      "correctEscalation": 0,
+      "correctRecovery": 0,
+      "unsafePrevented": 3,
+      "unsafeTotal": 23,
+      "falsePositiveBlocks": 0,
+      "falseNegativeUnsafe": 21,
+      "appropriateCompletions": 5,
+      "manualEffortComparison": "NOT_MEASURED"
+    }
+  }
+}

@@ -210,6 +210,20 @@ The current implementation uses the deterministic baseline mapping and does not 
 
 Evaluation uses deterministic synthetic cases. Current fixture evaluation: **8/8 PASS**.
 
+Decision quality is measured over 28 synthetic cases against a documented
+naive baseline (`docs/BASELINE.md`, full report in
+`docs/EVALUATION_REPORT.md`, machine-readable output in `eval/results.json`):
+
+- Preflight: **28/28 correct** (5 success, 19 block, 3 escalation, 1 recovery)
+- False positives: **0** · false negatives (unsafe continuations): **0**
+- Unsafe continuations prevented: **23/23**
+- Safety probes denied (blocked/unknown/missing/stale/changed/unverified submit attempts): **6/6**
+- Reruns produce byte-identical results.
+
+These are results on the current synthetic evaluation set, NOT a general
+accuracy claim. Known limitation: uniformly incorrect but internally
+consistent evidence may remain undetectable (see the report's senior review).
+
 The final evaluation will measure things such as:
 
 - extraction accuracy
@@ -226,7 +240,7 @@ Only measured results belong in the final results table. Never present targets a
 
 Current verified state:
 
-- Vitest: 113/113 PASS
+- Vitest: 127/127 PASS
 - Fixture evaluation: 8/8 PASS
 - Production build: PASS
 - Playwright E2E: 8/8 PASS

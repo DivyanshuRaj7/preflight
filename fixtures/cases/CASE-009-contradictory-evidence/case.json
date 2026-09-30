@@ -1,0 +1,22 @@
+{
+  "id": "CASE-009-contradictory-evidence",
+  "scenario": "contradictory-evidence",
+  "profile": {
+    "name": { "value": "Rina Das", "evidenceIds": ["ev-identity-name-a", "ev-identity-name-b"] },
+    "dateOfBirth": { "value": "2004-05-17", "evidenceIds": ["ev-identity-dob"] },
+    "requiredDocuments": {
+      "identity": "present",
+      "marksheet": "present",
+      "income-certificate": "present",
+      "bank-proof": "present",
+      "scholarship-application": "present"
+    },
+    "version": "v1"
+  },
+  "evidence": [
+    { "id": "ev-identity-name-a", "documentId": "doc-identity", "documentType": "identity", "page": 1, "field": "name", "text": "Rina Das", "bbox": [20, 40, 400, 70], "extractionMethod": "synthetic", "confidence": 1.0 },
+    { "id": "ev-identity-name-b", "documentId": "doc-identity", "documentType": "identity", "page": 2, "field": "name", "text": "Rina Dey", "bbox": [20, 40, 400, 70], "extractionMethod": "synthetic", "confidence": 1.0 },
+    { "id": "ev-identity-dob", "documentId": "doc-identity", "documentType": "identity", "page": 1, "field": "dateOfBirth", "text": "2004-05-17", "bbox": [20, 90, 300, 115], "extractionMethod": "synthetic", "confidence": 1.0 },
+    { "id": "ev-income-expiry", "documentId": "doc-income-certificate", "documentType": "income-certificate", "page": 1, "field": "expiryDate", "text": "2027-03-31", "bbox": [20, 40, 380, 70], "extractionMethod": "synthetic", "confidence": 1.0 }
+  ]
+}

@@ -168,6 +168,27 @@ ACTION → OBSERVE ACTUAL STATE → KNOWN SUCCESS? → continue
   `flaky-save`, `unknown-save`) exercise drift tolerance, single recovery,
   and stop-on-unknown without randomness or network.
 
+### Uncertainty Boundary (reliability milestone)
+
+Architectural decision, justified: UNCERTAIN lives in the
+`src/domain/safety/` decision envelope, NOT in the main lifecycle state
+machine. Five layers already terminate uncertainty in dedicated states
+(BLOCKED; AMBIGUOUS/UNMAPPED; ESCALATED + UNKNOWN_STATE; INVALIDATED;
+UNKNOWN verdicts), and AGENTS.md already mandates uncertainty → BLOCKED /
+NEEDS_REVIEW / UNKNOWN. A parallel global UNCERTAIN state would fork the
+submission invariant, the UI, the eval harness, and 100+ tests for zero new
+information — while creating two sources of truth.
+
+Instead `SafetyDecision` names uncertainty explicitly (`CERTAIN` |
+`UNCERTAIN`), carries full provenance (verdict, reason, evidenceIds,
+detector, rule), and resolves structurally ONLY to existing non-success
+terminals. The constructor throws on any other target, so UNCERTAIN can
+never become READY, APPROVED, SUBMITTING, or any success state — enforced
+by code, not convention. Translators render existing preflight, mapping,
+execution, and approval outcomes into this uniform envelope without
+changing their behavior. See `docs/FAILURE_TAXONOMY.md` and
+`docs/FAILURE_COVERAGE.md`.
+
 ### Human Approval + Synthetic Submission (TASK-007)
 
 ```text
