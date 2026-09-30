@@ -1,0 +1,137 @@
+/* Synthetic portal styles: a credible application website, deliberately NOT
+   the Preflight console. Clean type, hairlines, no gradients, no glow. */
+
+.sp-page {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: #f7f6f3;
+  color: #1c1a16;
+  min-height: 100dvh;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sp-page { background: #101012; color: #f2f1ed; }
+  .sp-page .sp-main { background: #17181b; border-color: #2a2b30; }
+  .sp-page .sp-field input,
+  .sp-page .sp-field textarea { background: #101012; border-color: #3a3b41; color: #f2f1ed; }
+  .sp-page .sp-doc-list > li + li { border-top-color: #2a2b30; }
+  .sp-page .sp-synth { border-color: #6b6252; color: #c9a94e; }
+}
+
+.sp-skip {
+  position: absolute;
+  left: 16px;
+  top: -48px;
+  z-index: 50;
+  background: #1c1a16;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+}
+.sp-skip:focus-visible { top: 8px; }
+
+.sp-masthead {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px 8px;
+}
+.sp-synth {
+  display: inline-block;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  border: 1px solid #b3a67f;
+  color: #7a6a35;
+  border-radius: 9999px;
+  padding: 3px 12px;
+  margin: 0 0 12px;
+}
+.sp-masthead h1 { font-size: 30px; font-weight: 650; letter-spacing: -0.02em; margin: 0; }
+.sp-sub { margin: 8px 0 0; color: #5c5850; font-size: 15px; }
+@media (prefers-color-scheme: dark) {
+  .sp-sub { color: #a8a49a; }
+}
+
+.sp-main {
+  max-width: 720px;
+  margin: 24px auto 64px;
+  padding: 8px 24px 32px;
+  background: #ffffff;
+  border: 1px solid #e5e1d8;
+  border-radius: 10px;
+}
+.sp-main section { margin-top: 24px; }
+.sp-section-title { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; color: #5c5850; margin: 0 0 4px; }
+@media (prefers-color-scheme: dark) {
+  .sp-section-title { color: #a8a49a; }
+}
+.sp-status {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  margin: 4px 0 0;
+}
+
+.sp-field { display: flex; flex-direction: column; gap: 6px; margin-top: 14px; }
+.sp-field > label { font-size: 13.5px; font-weight: 500; }
+.sp-field input,
+.sp-field textarea {
+  font: inherit;
+  font-size: 14.5px;
+  padding: 9px 12px;
+  min-height: 42px;
+  border-radius: 6px;
+  border: 1px solid #cfc9bc;
+  background: #fff;
+  color: inherit;
+  max-width: 100%;
+}
+.sp-field input:hover,
+.sp-field textarea:hover { border-color: #8a8478; }
+.sp-field input:focus-visible,
+.sp-field textarea:focus-visible { outline: 2px solid #2f5fd0; outline-offset: 2px; }
+
+.sp-doc-list { list-style: none; margin: 8px 0 0; padding: 0; }
+.sp-doc-list > li + li { border-top: 1px solid #e5e1d8; }
+.sp-doc-list > li { padding: 10px 2px; font-size: 14.5px; }
+.sp-note { font-size: 13px; color: #5c5850; margin: 12px 0 0; }
+@media (prefers-color-scheme: dark) {
+  .sp-note { color: #a8a49a; }
+}
+
+.sp-actions { margin-top: 28px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.sp-actions button {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 9px 22px;
+  min-height: 42px;
+  border-radius: 6px;
+  border: 1px solid #1c1a16;
+  background: #1c1a16;
+  color: #fff;
+  cursor: pointer;
+}
+.sp-actions button:hover { opacity: 0.88; }
+.sp-actions button:active { transform: translateY(1px); }
+.sp-actions button:focus-visible { outline: 2px solid #2f5fd0; outline-offset: 2px; }
+.sp-saved-note { margin: 0; font-size: 14px; font-weight: 500; }
+
+button, select { touch-action: manipulation; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+@media (pointer: coarse) {
+  .sp-actions button { min-height: 44px; }
+  .sp-field input, .sp-field textarea { min-height: 44px; }
+}
+
+@media (max-width: 767px) {
+  .sp-masthead { padding: 28px 16px 4px; }
+  .sp-masthead h1 { font-size: 24px; }
+  .sp-main { margin: 16px 12px 48px; padding: 4px 16px 24px; }
+}

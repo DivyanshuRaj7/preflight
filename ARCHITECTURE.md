@@ -88,3 +88,56 @@ type DemoScenario =
 ```
 
 Document defects belong to fixtures. Portal label drift and submit timeout belong to the synthetic portal.
+
+## Browser execution layer
+
+Playwright is the browser execution layer. TASK-005B establishes browser
+connectivity only: a real Chromium opens the synthetic portal and proves
+read → interact → verify through accessible semantics. Intelligent
+field mapping and controlled execution are intentionally implemented in
+later tasks, never in the smoke test.
+
+```text
+Playwright
+    ↓
+Portal observation
+    ↓
+PortalField[]
+    ↓
+Semantic Mapping (deterministic baseline; AI provider later)
+    ↓
+FieldMapping[]
+    ↓
+Execution (later task)
+```
+
+### Browser Execution Boundary (TASK-005D)
+
+Execution moves an already-READY application into the synthetic portal and
+stops at SAVED. Final submission, approval, recovery, and retries are
+intentionally later work.
+
+```text
+READY validation result
+    ↓
+Browser Inspection (adapter reports id/label/type, never meaning)
+    ↓
+PortalField[]
+    ↓
+Semantic Mapping (existing deterministic baseline)
+    ↓
+FieldMapping[] + canonical values (profile identity facts, evidence amounts)
+    ↓
+Execution Plan (refused unless READY, version-bound, fully MATCHED, valued)
+    ↓
+Playwright fill by stable id (no semantic re-derivation, no coordinates)
+    ↓
+Independent DOM read-back vs plan (COMPLETION ≠ CORRECTNESS)
+    ↓
+Save Draft only when every read-back matches, then verify SAVED
+```
+
+Rules: BLOCKED preflight refuses before any browser interaction;
+UNMAPPED/AMBIGUOUS required fields and missing values refuse before any
+fill; any read-back mismatch forbids Save Draft with expected vs observed;
+the adapter never validates, never maps, and never submits.

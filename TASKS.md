@@ -117,8 +117,83 @@ Definition of done:
 - `npm run check`, `npm run test`, `npm run eval` are green.
 - `npm run dev` serves the UI locally.
 
-## TASK-005 — Synthetic portal
-**Status:** TODO
+## TASK-005 — Synthetic portal + browser layer
+**Status:** IN PROGRESS (005A, 005B, 005C DONE; 005D current)
+
+## TASK-005A — Synthetic scholarship portal (target only)
+**Status:** DONE
+
+Scope:
+- Local synthetic portal at `/portal/scholarship-renewal` in
+  `src/portal/scholarship/` (component, pure DRAFT|SAVED state, styles).
+- Six labeled fields (Full Name kept for later label-drift work), four
+  informational document rows, Save Draft → SAVED, deterministic synthetic
+  prefills aligned with existing fixtures (fixtures untouched).
+- Semantic labels + stable data-testids for future Playwright; portal
+  imports zero Preflight domain logic.
+- Tests in `tests/ui/portal.test.tsx`.
+
+Non-goals (TASK-005B+): Playwright, browser agent, semantic mapping,
+failure injection, approval, submission, database, auth, network.
+
+Definition of done:
+- Route serves locally; DRAFT → SAVED visible in DOM and deterministic.
+- `npm run check`, `npm run test`, `npm run eval`, `npm run build` green.
+
+## TASK-005B — Playwright browser layer (smoke only)
+**Status:** DONE
+
+Scope:
+- `@playwright/test` + Chromium; `playwright.config.ts` (Chromium,
+  headless default, webServer auto-starts Vite on port 5220, screenshot
+  and trace on failure only).
+- One smoke test `tests/e2e/portal-smoke.spec.ts`: real browser opens
+  `/portal/scholarship-renewal`, verifies heading, SYNTHETIC indicator,
+  and DRAFT; reads Full Name (Rina Das) via accessible label; edits one
+  safe field; clicks Save Draft; observes SAVED + Draft saved.
+- Scripts: `npm run test:e2e`, `npm run test:e2e:headed`. Fresh-clone
+  browser install: `npx playwright install chromium`.
+
+Non-goals (later tasks): agent, mapping, auto-fill, state machine,
+failure injection, recovery, approval, submission. No agent logic here.
+
+## TASK-005C — Semantic field mapping (no execution)
+**Status:** DONE
+
+Scope:
+- `src/domain/mapping/` contracts + deterministic baseline; canonical
+  profile schema untouched, portal vocabulary lives in the mapping layer.
+- Full-equality normalized matching only (no substrings); explicit alias
+  table (Full Name/Applicant Legal Name→fullName, DOB→dateOfBirth,
+  Family Income→annualFamilyIncome, Account Number→bankAccountNumber);
+  explicit AMBIGUOUS set (bare Reference); unknown → UNMAPPED.
+- EXACT 1.0 / ALIAS 0.9 fixed confidence; SemanticMappingProvider
+  boundary with DeterministicBaselineProvider as the only runner.
+- Tests in `tests/unit/mapping.test.ts` incl. v1/v2 label-drift invariance.
+
+Non-goals (TASK-005D+): filling, execution, recovery, approval,
+submission. Mapper has zero Playwright/React/network/LLM dependency
+and fills nothing.
+
+## TASK-005D — Validated execution to SAVED (no submission)
+**Status:** DONE
+
+Scope:
+- `src/domain/execution/` contracts + pure plan/finalize; READY-gated,
+  version-bound plans; UNMAPPED/AMBIGUOUS/missing-value refusal; exact
+  read-back comparison (COMPLETION ≠ CORRECTNESS).
+- `src/adapters/browser/` portal inspection (id/label/type metadata),
+  id-based fill/read, save/state primitives, plan runner. Adapter never
+  validates, maps, or submits.
+- CASE-001 gains income/bank/reference evidence (no expected-output
+  change); canonical values resolve from profile + evidence, never
+  literals in production code.
+- Tests: `tests/unit/execution.test.ts` (BLOCKED/UNMAPPED/AMBIGUOUS/
+  mismatch safety), `tests/e2e/application-execution.spec.ts` (real
+  six-field fill → verify → SAVED, no Submit).
+
+Non-goals (later tasks): final Submit, approval, recovery, retries,
+planning loop, LLM control. Execution stops at SAVED.
 
 ## TASK-006 — Playwright execution + state verification
 **Status:** TODO

@@ -37,6 +37,8 @@ Then read `TASKS.md`. Do not ask the coding agent to build the entire product at
 - `npm run eval` — fixture evaluation.
 - `npm run dev` — start the Preflight UI locally (Vite).
 - `npm run build` — production build of the UI into `dist/`.
+- `npm run test:e2e` — Playwright browser smoke test (starts Vite automatically).
+- `npx playwright install chromium` — one-time browser install for a fresh clone.
 - `npm run demo:reset` — reset local synthetic demo state.
 
 ## AI disclosure

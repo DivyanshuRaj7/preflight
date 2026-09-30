@@ -21,6 +21,9 @@
     { "id": "ev-income-expiry", "documentId": "doc-income-certificate", "documentType": "income-certificate", "page": 1, "field": "expiryDate", "text": "2027-03-31", "bbox": [20, 40, 380, 70], "extractionMethod": "synthetic", "confidence": 1.0 },
     { "id": "ev-marksheet-name", "documentId": "doc-marksheet", "documentType": "marksheet", "page": 1, "field": "name", "text": "Rina Das", "bbox": [30, 20, 360, 45], "extractionMethod": "synthetic", "confidence": 1.0 },
     { "id": "ev-marksheet-dob", "documentId": "doc-marksheet", "documentType": "marksheet", "page": 1, "field": "dateOfBirth", "text": "2004-05-17", "bbox": [30, 50, 320, 80], "extractionMethod": "synthetic", "confidence": 1.0 },
-    { "id": "ev-application-name", "documentId": "doc-scholarship-application", "documentType": "scholarship-application", "page": 1, "field": "name", "text": "Rina Das", "bbox": [40, 30, 380, 55], "extractionMethod": "synthetic", "confidence": 1.0 }
+    { "id": "ev-application-name", "documentId": "doc-scholarship-application", "documentType": "scholarship-application", "page": 1, "field": "name", "text": "Rina Das", "bbox": [40, 30, 380, 55], "extractionMethod": "synthetic", "confidence": 1.0 },
+    { "id": "ev-income-amount", "documentId": "doc-income-certificate", "documentType": "income-certificate", "page": 1, "field": "annualFamilyIncome", "text": "180000", "bbox": [20, 80, 300, 105], "extractionMethod": "synthetic", "confidence": 1.0 },
+    { "id": "ev-bank-account", "documentId": "doc-bank-proof", "documentType": "bank-proof", "page": 1, "field": "bankAccountNumber", "text": "SYNTHETIC-001234", "bbox": [20, 170, 400, 195], "extractionMethod": "synthetic", "confidence": 1.0 },
+    { "id": "ev-application-ref", "documentId": "doc-scholarship-application", "documentType": "scholarship-application", "page": 1, "field": "scholarshipApplicationReference", "text": "SCH-2026-001", "bbox": [40, 110, 360, 135], "extractionMethod": "synthetic", "confidence": 1.0 }
   ]
 }
