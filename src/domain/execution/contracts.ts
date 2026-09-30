@@ -8,7 +8,7 @@ import type { CanonicalField, FieldMapping } from "../mapping/contracts.js";
 // Lifecycle for this task only: IDLE → EXECUTING → VERIFYING → VERIFIED.
 // Any failure terminates with status FAILED and a typed reason.
 
-export type ExecutionStatus = "IDLE" | "EXECUTING" | "VERIFYING" | "VERIFIED" | "FAILED";
+export type ExecutionStatus = "IDLE" | "EXECUTING" | "VERIFYING" | "VERIFIED" | "RECOVERED" | "ESCALATED" | "FAILED";
 
 export type ExecutionFailureReason =
   | "BLOCKED_PREFLIGHT"
@@ -17,7 +17,8 @@ export type ExecutionFailureReason =
   | "AMBIGUOUS_REQUIRED_FIELD"
   | "MISSING_VALUE"
   | "VERIFICATION_MISMATCH"
-  | "SAVE_DRAFT_FAILED";
+  | "SAVE_DRAFT_FAILED"
+  | "UNKNOWN_STATE";
 
 export type ExecutionFailure = {
   reason: ExecutionFailureReason;
@@ -57,6 +58,44 @@ export type ExecutionResult = {
   saveDraftSucceeded: boolean;
   portalState: "SAVED" | null;
   failure: ExecutionFailure | null;
+  recoveryAttempts: number;
+  trace: ExecutionEvent[];
 };
+
+export type ExecutionEventType =
+  | "EXECUTION_STARTED"
+  | "PORTAL_INSPECTED"
+  | "MAPPING_RESOLVED"
+  | "ACTION_ATTEMPTED"
+  | "ACTION_FAILED"
+  | "STATE_VERIFIED"
+  | "RECOVERY_STARTED"
+  | "RECOVERY_COMPLETED"
+  | "ESCALATED"
+  | "EXECUTION_COMPLETED";
+
+// One trace event: WHAT happened, WHY, WHAT state was observed, and WHAT
+// Preflight does next. Synthetic data only — never secrets or PII.
+export type ExecutionEvent = {
+  seq: number;
+  type: ExecutionEventType;
+  detail: string;
+  observedState?: string | null;
+};
+
+export type ExecutionTracer = {
+  events: ExecutionEvent[];
+  record: (type: ExecutionEventType, detail: string, observedState?: string | null) => void;
+};
+
+export function createTracer(): ExecutionTracer {
+  const events: ExecutionEvent[] = [];
+  return {
+    events,
+    record: (type, detail, observedState) => {
+      events.push({ seq: events.length + 1, type, detail, observedState: observedState ?? null });
+    },
+  };
+}
 
 export type { FieldMapping };

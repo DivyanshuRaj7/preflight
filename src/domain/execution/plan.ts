@@ -132,6 +132,8 @@ export function finalizeExecution(
         plan,
         verified,
         saveDraftSucceeded: false,
+        recoveryAttempts: 0,
+        trace: [],
         portalState: null,
         failure: fail("VERIFICATION_MISMATCH", `Field '${field.canonicalField}' was never observed in the DOM.`, {
           canonicalField: field.canonicalField,
@@ -154,6 +156,8 @@ export function finalizeExecution(
         plan,
         verified,
         saveDraftSucceeded: false,
+        recoveryAttempts: 0,
+        trace: [],
         portalState: null,
         failure: fail(
           "VERIFICATION_MISMATCH",
@@ -174,9 +178,12 @@ export function finalizeExecution(
       plan,
       verified,
       saveDraftSucceeded: false,
+        recoveryAttempts: 0,
+        trace: [],
       portalState: null,
       failure: fail("SAVE_DRAFT_FAILED", "Save Draft did not reach SAVED state."),
     };
   }
-  return { status: "VERIFIED", plan, verified, saveDraftSucceeded: true, portalState: "SAVED", failure: null };
+  return { status: "VERIFIED", plan, verified, saveDraftSucceeded: true, portalState: "SAVED", failure: null, recoveryAttempts: 0, trace: [] };
 }
+

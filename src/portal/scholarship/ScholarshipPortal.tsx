@@ -24,13 +24,40 @@ const EXPECTED_DOCUMENTS = [
 ] as const;
 
 export function ScholarshipPortal() {
+  // Deterministic test instrumentation (TASK-006): query-param scenario
+  // modes alter portal behavior without randomness or network. Absent param
+  // = default portal; existing tests and behavior are untouched.
+  const [scenario] = useState(() =>
+    typeof window === "undefined" ? "" : new URLSearchParams(window.location.search).get("scenario") ?? "",
+  );
   const [status, setStatus] = useState(initialPortalState);
+  const [saveAttempts, setSaveAttempts] = useState(0);
+  const [saveStuck, setSaveStuck] = useState(false);
   const [fullName, setFullName] = useState(DEMO_APPLICANT.fullName);
   const [dateOfBirth, setDateOfBirth] = useState(DEMO_APPLICANT.dateOfBirth);
   const [address, setAddress] = useState(DEMO_APPLICANT.address);
   const [annualIncome, setAnnualIncome] = useState(DEMO_APPLICANT.annualIncome);
   const [bankAccount, setBankAccount] = useState(DEMO_APPLICANT.bankAccount);
   const [applicationReference, setApplicationReference] = useState(DEMO_APPLICANT.applicationReference);
+  function handleSaveDraft(): void {
+    if (scenario === "flaky-save" && saveAttempts === 0) {
+      // Deterministic recoverable failure: the first attempt silently does
+      // nothing observable; the portal provably remains DRAFT.
+      setSaveAttempts(1);
+      return;
+    }
+    if (scenario === "unknown-save") {
+      // Deterministic inconclusive failure: the request leaves and the state
+      // never resolves — neither SAVED nor confirmably DRAFT.
+      setSaveAttempts(saveAttempts + 1);
+      setSaveStuck(true);
+      return;
+    }
+    setSaveAttempts(saveAttempts + 1);
+    setStatus(saveDraft());
+  }
+
+  const visibleStatus = status === "SAVED" ? "SAVED" : saveStuck ? "SAVING…" : status;
 
   return (
     <div className="sp-page">
@@ -52,13 +79,13 @@ export function ScholarshipPortal() {
         <section aria-label="Application status">
           <h2 className="sp-section-title">Application status</h2>
           <p className="sp-status" data-testid="application-status" role="status" aria-live="polite">
-            {status}
+            {visibleStatus}
           </p>
         </section>
         <section aria-label="Applicant details">
           <h2 className="sp-section-title">Applicant details</h2>
           <div className="sp-field">
-            <label htmlFor="full-name">Full Name</label>
+            <label htmlFor="full-name">{scenario === "label-drift" ? "Applicant Legal Name" : "Full Name"}</label>
             <input
               id="full-name"
               data-testid="full-name"
@@ -145,7 +172,7 @@ export function ScholarshipPortal() {
           <p className="sp-note">Informational only. Document upload is not part of this synthetic portal.</p>
         </section>
         <div className="sp-actions">
-          <button type="button" data-testid="save-draft" onClick={() => setStatus(saveDraft())}>
+          <button type="button" data-testid="save-draft" onClick={handleSaveDraft}>
             Save Draft
           </button>
           {status === "SAVED" ? <p className="sp-saved-note">Draft saved</p> : null}

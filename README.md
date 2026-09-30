@@ -51,10 +51,12 @@ The current vertical slice covers a synthetic scholarship renewal workflow:
 5. Portal fields are mapped to canonical fields through the semantic mapping boundary.
 6. Playwright fills the mapped fields.
 7. Preflight reads the values back from the browser and compares them against expected values.
-8. Save Draft is allowed only after successful verification.
-9. The portal's SAVED state is independently verified.
+8. Portal label drift is absorbed by the existing mapper without changing the profile.
+9. Save Draft is allowed only after successful verification.
+10. The portal's SAVED state is independently verified.
+11. A confirmed miss gets exactly one bounded recovery; unknown state escalates instead of retrying.
 
-Final submission is not implemented yet.
+The truthful terminal state is SAVED, not SUBMITTED. Final submission is not implemented yet.
 
 ## Core architecture
 
@@ -75,7 +77,12 @@ Semantic Field Mapping
         ↓
 Execution Plan
         ↓
-Playwright Browser Execution
+Playwright Execution
+        ↓
+State Verification
+    ├── EXPECTED → continue
+    ├── NOT REACHED → bounded recovery
+    └── UNKNOWN → escalate
         ↓
 Independent Read-back
         ↓
@@ -158,6 +165,14 @@ Deterministic layer — owns:
 - expected-vs-observed verification
 - submission authorization
 
+Failure handling is deterministic, not autonomous:
+
+- browser actions are not successful merely because Playwright did not throw
+- actual portal state is inspected after every action
+- known recoverable failures use a bounded recovery policy (exactly one retry)
+- unknown state is preserved as uncertainty and escalated, never blindly retried
+- required AMBIGUOUS/UNMAPPED mappings cannot execute
+
 The current implementation uses the deterministic baseline mapping and does not require a paid AI API.
 
 ## Evaluation
@@ -180,18 +195,34 @@ Only measured results belong in the final results table. Never present targets a
 
 Current verified state:
 
-- Vitest: 94/94 PASS
+- Vitest: 101/101 PASS
 - Fixture evaluation: 8/8 PASS
 - Production build: PASS
-- Playwright E2E: 2/2 PASS
+- Playwright E2E: 5/5 PASS
 
 The browser suite currently covers:
 
 - portal smoke test
-- six-field execution
+- clean six-field execution
+- portal label drift
+- recoverable save failure (one bounded recovery)
+- unknown save state (escalation, no retry)
 - independent read-back
 - SAVED state
 - zero Submit interaction
+
+## Failure handling
+
+Preflight records structured execution events so a failed run can explain:
+
+- what action was attempted
+- what failed
+- what state was observed
+- whether recovery was safe
+- whether recovery occurred
+- why escalation happened
+
+Unknown state results in escalation rather than blind retry.
 
 ## AI disclosure
 
@@ -210,13 +241,17 @@ Implemented:
 - semantic portal-field mapping
 - validated browser execution
 - independent read-back verification
+- label drift handling
+- actual state verification
+- bounded recovery
+- unknown-state escalation
+- structured execution trace
 - Save Draft / SAVED verification
 
 Next milestone:
 
-- controlled browser failure handling
-- actual-state verification after failures
-- recovery vs escalation behavior
+- human approval gate
+- final submission workflow
 
 ## Demo
 

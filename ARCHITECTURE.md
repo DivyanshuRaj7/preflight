@@ -141,3 +141,29 @@ Rules: BLOCKED preflight refuses before any browser interaction;
 UNMAPPED/AMBIGUOUS required fields and missing values refuse before any
 fill; any read-back mismatch forbids Save Draft with expected vs observed;
 the adapter never validates, never maps, and never submits.
+
+### Failure-Aware Execution (TASK-006)
+
+Playwright actions are never trusted on their own: every action is followed
+by an observation of actual browser state, classified by a typed verifier.
+
+```text
+ACTION → OBSERVE ACTUAL STATE → KNOWN SUCCESS? → continue
+                             → confirmed NOT_REACHED → one bounded recovery → verify again
+                             → UNKNOWN → STOP / ESCALATE (never retry)
+```
+
+- `verifyPortalState` distinguishes EXPECTED_STATE / NOT_REACHED / UNKNOWN
+  from observed DOM text. Only the previously-known safe state counts as a
+  confirmed miss; anything else is inconclusive.
+- `decideRecoveryPolicy` allows exactly one recovery (`MAX_RECOVERY_ATTEMPTS
+  = 1`) for confirmed misses. UNKNOWN always escalates — uncertainty never
+  retries, never assumes success, never assumes failure, never continues to
+  Save Draft.
+- Every run emits a structured `ExecutionEvent` trace (started, inspected,
+  attempted, failed, verified, recovery started/completed, escalated,
+  completed) answering WHAT happened, WHY, WHAT was observed, and WHAT
+  Preflight did next.
+- Deterministic portal scenario modes (`?scenario=label-drift`,
+  `flaky-save`, `unknown-save`) exercise drift tolerance, single recovery,
+  and stop-on-unknown without randomness or network.

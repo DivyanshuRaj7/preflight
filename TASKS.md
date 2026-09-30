@@ -195,8 +195,24 @@ Scope:
 Non-goals (later tasks): final Submit, approval, recovery, retries,
 planning loop, LLM control. Execution stops at SAVED.
 
-## TASK-006 — Playwright execution + state verification
-**Status:** TODO
+## TASK-006 — Failure-aware browser execution
+**Status:** DONE
+
+Scope:
+- Typed state verifier (EXPECTED_STATE / NOT_REACHED / UNKNOWN) over
+  observed DOM text; UNKNOWN never retries, never assumes, never saves.
+- Bounded recovery policy: exactly one retry for confirmed misses, then
+  escalate. Outcomes RECOVERED / ESCALATED added; BLOCKED/UNMAPPED/
+  AMBIGUOUS/mismatch guards preserved.
+- Structured execution trace (10 event types) on every run.
+- Portal scenario modes via `?scenario=`: label-drift (mapper resolves
+  Applicant Legal Name), flaky-save (one miss → recovery → SAVED),
+  unknown-save (inconclusive → ESCALATED, single attempt proven).
+- Tests: `tests/unit/recovery.test.ts`, `tests/e2e/label-drift.spec.ts`,
+  `tests/e2e/save-recovery.spec.ts`.
+
+Non-goals (later tasks): final Submit, approval, planning loop, LLM
+control. Execution stops at SAVED.
 
 ## TASK-007 — Approval + controlled submission
 **Status:** TODO
