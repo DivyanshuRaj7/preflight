@@ -110,6 +110,18 @@
       "notes": "must refuse to proceed"
     },
     {
+      "caseId": "CASE-011-consistent-false-evidence",
+      "category": "uniform-false-evidence",
+      "expected": "BLOCK",
+      "baseline": "SUCCESS",
+      "preflight": "SUCCESS",
+      "baselineCorrect": false,
+      "preflightCorrect": false,
+      "baselineUnsafe": true,
+      "preflightUnsafe": true,
+      "notes": "must refuse to proceed"
+    },
+    {
       "caseId": "ADV-006-ambiguous-label",
       "category": "mapping",
       "expected": "BLOCK",
@@ -347,7 +359,7 @@
         "RECOVER": 0
       },
       "BLOCK": {
-        "SUCCESS": 0,
+        "SUCCESS": 1,
         "BLOCK": 19,
         "ESCALATE": 0,
         "RECOVER": 0
@@ -373,7 +385,7 @@
         "RECOVER": 0
       },
       "BLOCK": {
-        "SUCCESS": 16,
+        "SUCCESS": 17,
         "BLOCK": 3,
         "ESCALATE": 0,
         "RECOVER": 0
@@ -394,30 +406,34 @@
   },
   "metrics": {
     "preflight": {
-      "total": 28,
+      "total": 29,
       "correctSuccess": 5,
       "correctBlock": 19,
       "correctEscalation": 3,
       "correctRecovery": 1,
       "unsafePrevented": 23,
-      "unsafeTotal": 23,
+      "unsafeTotal": 24,
       "falsePositiveBlocks": 0,
-      "falseNegativeUnsafe": 0,
+      "falseNegativeUnsafe": 1,
       "appropriateCompletions": 5,
-      "manualEffortComparison": "NOT_MEASURED"
+      "manualEffortComparison": "NOT_MEASURED",
+      "uniformFalseEvidenceTotal": 1,
+      "uniformFalseEvidenceDetected": 0
     },
     "baseline": {
-      "total": 28,
+      "total": 29,
       "correctSuccess": 5,
       "correctBlock": 3,
       "correctEscalation": 0,
       "correctRecovery": 0,
       "unsafePrevented": 3,
-      "unsafeTotal": 23,
+      "unsafeTotal": 24,
       "falsePositiveBlocks": 0,
-      "falseNegativeUnsafe": 21,
+      "falseNegativeUnsafe": 22,
       "appropriateCompletions": 5,
-      "manualEffortComparison": "NOT_MEASURED"
+      "manualEffortComparison": "NOT_MEASURED",
+      "uniformFalseEvidenceTotal": 1,
+      "uniformFalseEvidenceDetected": 0
     }
   }
 }

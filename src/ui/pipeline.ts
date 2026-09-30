@@ -37,6 +37,7 @@ export type CaseInput = {
   scenario: string;
   profile: ApplicantProfile;
   evidence: Evidence[];
+  adversarial?: boolean;
 };
 
 export type CaseDocument = {
@@ -49,6 +50,9 @@ export type CaseDocument = {
 export type PreflightRun = {
   caseId: string;
   scenario: string;
+  // Presentation metadata passthrough: marks adversarial evaluation cases so
+  // the UI can label them. Never influences any verdict.
+  adversarial: boolean;
   documents: CaseDocument[];
   results: ExtractionResult[];
   profile: ApplicantProfile;
@@ -106,5 +110,6 @@ export async function runPreflightCase(input: CaseInput): Promise<PreflightRun> 
     };
   });
 
-  return { caseId: input.id, scenario: input.scenario, documents, results, profile, evidence, decision };
+  return { caseId: input.id, scenario: input.scenario, adversarial: input.adversarial === true, documents, results, profile, evidence,
+decision };
 }

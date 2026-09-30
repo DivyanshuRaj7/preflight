@@ -26,9 +26,24 @@ describe("preflight UI", () => {
 
   it("renders READY for CASE-001", async () => {
     const s = await runCase("CASE-001-clean");
-    expect(await s.findByText(/Everything required for this application/)).toBeInTheDocument();
+    expect(await s.findByText("No blocking issues detected.")).toBeInTheDocument();
+    expect(s.getByText(/Evidence passed Preflight's defined validation checks./)).toBeInTheDocument();
     expect(s.getByText("5 documents · 3 critical fields · 0 blocking findings")).toBeInTheDocument();
     expect(s.getByText("Submission requires explicit human approval.")).toBeInTheDocument();
+    // No truth guarantee anywhere on a READY screen.
+    expect(s.queryByText(/objectively true|guaranteed correct|guaranteed to be accepted/i)).not.toBeInTheDocument();
+  });
+
+  it("labels CASE-011 as an adversarial known limitation, not a normal case", async () => {
+    const s = await runCase("CASE-011-consistent-false-evidence");
+    expect(s.getByText("ADVERSARIAL")).toBeInTheDocument();
+    expect(s.getByText(/Known limitation case/)).toBeInTheDocument();
+  });
+
+  it("does not label clean cases adversarial", async () => {
+    const s = await runCase("CASE-001-clean");
+    await s.findByText("No blocking issues detected.");
+    expect(s.queryByText("ADVERSARIAL")).not.toBeInTheDocument();
   });
 
   it("renders BLOCKED with NAME_MISMATCH for CASE-002", async () => {

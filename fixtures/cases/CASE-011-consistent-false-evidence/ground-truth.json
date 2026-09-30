@@ -1,0 +1,5 @@
+{
+  "field": "name",
+  "groundTruth": "Rina Das",
+  "note": "EVALUATION-ONLY ground truth. The runtime decision path (extraction output, profile assembly, validation, mapping, execution, approval) never reads this file. It exists solely so the evaluation can judge whether the system's decision was actually correct."
+}

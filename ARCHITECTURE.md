@@ -66,6 +66,16 @@ VERIFYING may also lead to RECOVER / ESCALATE.
 Submission uncertainty is UNKNOWN until verified.
 ```
 
+### READY verdict semantics
+
+READY means Preflight detected no blocking condition under its defined
+validation and evidence-consistency rules. It does not mean the submitted
+information is objectively true, that extracted values are guaranteed
+correct, or that the application is guaranteed to be accepted. The engine
+verifies consistency, provenance, and workflow correctness across available
+evidence; it has no independent source of ground truth (measured boundary:
+CASE-011). READY alone never authorizes submission.
+
 ## Provider abstraction
 
 ```ts

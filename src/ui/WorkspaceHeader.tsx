@@ -22,6 +22,14 @@ export function WorkspaceHeader({
       <p className="pf-case-id" translate="no">
         {selected.id} · {selected.scenario.split("-").join(" ").toUpperCase()}
       </p>
+      {selected.adversarial === true ? (
+        <p className="pf-adversarial-flag">
+          <span className="pf-badge pf-badge-awaiting" translate="no">
+            ADVERSARIAL
+          </span>{" "}
+          Known limitation case — its result tests the system boundary, not a normal application.
+        </p>
+      ) : null}
       <div className="pf-controls">
         <div className="pf-field pf-field-grow">
           <label htmlFor="case-select">Active application</label>

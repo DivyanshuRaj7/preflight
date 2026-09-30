@@ -36,8 +36,14 @@ authorization/state semantics. The runner fails on any Preflight mismatch.
 
 ## 6. Measured results
 
-Preflight: **28/28 correct** (5 success, 19 block, 3 escalation, 1 recovery).
-Baseline: **8/28 correct** (5 success, 3 block).
+TASK-008 historical result (28-case dataset, preserved): Preflight 28/28,
+0 false positives, 0 false negatives, 23/23 unsafe prevented. That result
+was valid for that dataset and stands.
+
+Current result (29 rows, includes CASE-011 below): Preflight 28/29; the
+single miss is the uniform-false-evidence experiment, recorded — not
+hidden — in the matrix, the metrics (`falseNegativeUnsafe=1`,
+`uniformFalseDetected=0/1`), and `eval/results.json`.
 
 ## 7. Decision confusion matrix
 
@@ -99,12 +105,50 @@ not re-run inside `npm run eval`.
 
 ## 13. Conclusions (strictly supported)
 
-- On this dataset, the reliability layer converts 21 unsafe baseline
+- On the 28-case dataset, the reliability layer converts 21 unsafe baseline
   continuations into 0, with 0 false-positive blocks.
 - Uncertainty handling (refusal, bounded recovery, escalation) is measured
   correct in all 10 adversarial/state rows.
 - "Recognized as outside coverage" (UNMAPPED/AMBIGUOUS/UNKNOWN) behaves as
   designed: terminal refusal, never silent success.
+- CASE-011 adds one measured false READY (uniform false evidence), recorded
+  in §14 rather than absorbed into the historical numbers above.
+
+## 14. Adversarial Experiment — Consistent False Evidence (TASK-009)
+
+1. **Objective.** Determine whether the architecture detects uniformly
+   incorrect but internally consistent extracted evidence.
+2. **Fixture design.** `fixtures/cases/CASE-011-consistent-false-evidence/`:
+   profile + evidence assert name "Rina Dey" across three documents with
+   confidence 1.0, valid documents, valid expiry, single normalized value.
+3. **Ground truth.** `ground-truth.json` in the same directory: name is
+   "Rina Das". It is read only by evaluation/tests, never by any runtime
+   module (proven by `tests/unit/uniform-false-evidence.test.ts`, which
+   asserts the true value appears in no runtime input).
+4. **Extracted evidence.** "Rina Dey" × 3 documents, mutually consistent.
+5. **Expected decision.** BLOCKED — from ground truth, not from hope.
+6. **Actual decision.** READY, zero findings. The engine ran unmodified.
+7. **Detection layer, if any.** None. Provenance resolves, agreement holds
+   (one distinct value), confidence passes, documents are present and fresh.
+8. **Genuinely independent?** N/A — no detection occurred. No hidden flags,
+   no leaked truth: the test pins that the true value is absent from all
+   runtime inputs, so the READY cannot be an artifact of leakage.
+9. **Impact on metrics.** Matrix 28/29; `falseNegativeUnsafe` 0→1;
+   `uniformFalseDetected` 0/1; baseline equally blind (22 unsafe). Gates 1–2
+   remain green; gate 3 records the miss without failing the run, by
+   documented design.
+10. **Limitation.** The architecture has no independent source of truth:
+    every layer downstream of extraction reasons about extracted values,
+    never about source documents. Consistency ≠ truth is unhandled.
+11. **Implications.** Ground-truth verification would require an
+    out-of-band signal (independent OCR, source visual check, trusted
+    registry, human review) — each a new trust problem of its own, and
+    outside MVP scope. The correct product posture is the stated boundary:
+    Preflight verifies consistency and workflow correctness across
+    available evidence, not ground truth. Canonical wording, used
+    consistently in code, UI, and docs: READY means no blocking condition
+    was detected under the defined validation and evidence-consistency
+    rules.
 
 ## Senior review
 
@@ -119,14 +163,16 @@ not re-run inside `npm run eval`.
    explanation.
 4. **Which classes are not evaluated?** Real-world input distributions,
    multilingual data, production auth/fraud, timing/manual effort.
-5. **What could still cause a false READY?** Evidence that is wrong but
-   mutually consistent (all documents agreeing on the same false fact),
-   and confidence scores that are high but miscalibrated — the engine
-   trusts consistent evidence by design.
+5. **What could still cause a false READY?** Measured in §14: evidence
+   that is wrong but mutually consistent. The engine trusts consistent
+   evidence by design; CASE-011 proves the READY.
 6. **What could still cause an unsafe submission?** A compromised or
    mistaken human approval (the fingerprint binds state, not truth), or a
    portal that reports SUBMITTED without submitting (observed-state trust).
+   Note the boundary held even here: the false READY still requires explicit
+   approval, and authorization still denies without it (pinned by test).
 7. **Single biggest remaining reliability risk:** consistent-but-false
-   evidence. Every check after extraction assumes the evidence means what
-   it says; a uniform lie across documents is currently undetectable. This
-   is the honest boundary of a consistency-based verifier.
+   evidence — now a measured 0/1 instead of a hypothesis. Every check after
+   extraction assumes the evidence means what it says; a uniform lie across
+   documents is undetectable by this architecture. This is the honest
+   boundary of a consistency-based verifier.

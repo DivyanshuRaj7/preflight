@@ -21,6 +21,7 @@ that proves it. Coverage is claimed honestly:
 | Cross-document DOB conflict | DOB_MISMATCH rule | BLOCKED | both evidences | none | correct source | CASE-003 | SUPPORTED |
 | Cross-document address conflict | ADDRESS_MISMATCH rule | BLOCKED | both evidences | none | correct source | CASE-007 | SUPPORTED |
 | Self-contradictory document | NAME_MISMATCH rule | BLOCKED | same-doc evidences | none | correct source | CASE-009 | SUPPORTED |
+| Uniformly false evidence | none exists — no independent signal | false READY (measured) | consistent evidences | none | human must verify source truth | CASE-011 | NOT SUPPORTED |
 | Ambiguous portal label | baseline mapper | refuse (AMBIGUOUS) | portal label | none | extend alias model | ADV-006 | SUPPORTED |
 | Unseen portal label | baseline mapper | refuse (UNMAPPED) | portal label | none | extend alias model | ADV-007 | SUPPORTED |
 | Unsupported extra portal field | baseline mapper | refuse (UNMAPPED) | portal label | none | extend alias model | ADV-011 | SUPPORTED |

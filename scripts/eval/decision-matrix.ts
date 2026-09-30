@@ -103,6 +103,7 @@ export function preflightStateDecision(observed: string, expected: string): Deci
 }
 
 function categoryOfScenario(scenario: string): string {
+  if (scenario.includes("consistent-false")) return "uniform-false-evidence";
   if (scenario.includes("name") || scenario.includes("dob") || scenario.includes("address")) return "identity";
   if (scenario.includes("missing") || scenario.includes("expired") || scenario.includes("confidence")) return "evidence";
   if (scenario.includes("combined")) return "combined";
@@ -333,6 +334,8 @@ export type DecisionMetrics = {
   falseNegativeUnsafe: number;
   appropriateCompletions: number;
   manualEffortComparison: "NOT_MEASURED";
+  uniformFalseEvidenceTotal: number;
+  uniformFalseEvidenceDetected: number;
 };
 
 export function computeMetrics(rows: MatrixRow[], system: "baseline" | "preflight"): DecisionMetrics {
@@ -351,5 +354,7 @@ export function computeMetrics(rows: MatrixRow[], system: "baseline" | "prefligh
     falseNegativeUnsafe: rows.filter((r) => unsafe(r)).length,
     appropriateCompletions: rows.filter((r) => r.expected === "SUCCESS" && actual(r) === "SUCCESS").length,
     manualEffortComparison: "NOT_MEASURED",
+    uniformFalseEvidenceTotal: rows.filter((r) => r.category === "uniform-false-evidence").length,
+    uniformFalseEvidenceDetected: rows.filter((r) => r.category === "uniform-false-evidence" && correct(r)).length,
   };
 }

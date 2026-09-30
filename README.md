@@ -114,6 +114,8 @@ Central principle: **AI for ambiguity. Code for correctness.**
 
 Semantic interpretation (what a portal label means) is isolated from deterministic validation, execution authorization, and state verification. A wrong confident interpretation can never silently become a trusted fact.
 
+READY verdict semantics: **READY means Preflight detected no blocking condition under its defined validation and evidence-consistency rules.** It does not mean the information is objectively true, that all extracted values are guaranteed correct, or that the application is guaranteed to be accepted. Consistency and validation are not independent ground truth.
+
 ## Core documents
 
 - `PRD.md` — product requirements and scope.
@@ -210,19 +212,23 @@ The current implementation uses the deterministic baseline mapping and does not 
 
 Evaluation uses deterministic synthetic cases. Current fixture evaluation: **8/8 PASS**.
 
-Decision quality is measured over 28 synthetic cases against a documented
+Decision quality is measured over 29 synthetic cases against a documented
 naive baseline (`docs/BASELINE.md`, full report in
 `docs/EVALUATION_REPORT.md`, machine-readable output in `eval/results.json`):
 
-- Preflight: **28/28 correct** (5 success, 19 block, 3 escalation, 1 recovery)
-- False positives: **0** · false negatives (unsafe continuations): **0**
-- Unsafe continuations prevented: **23/23**
+- Preflight: **28/29 correct** (5 success, 19 block, 3 escalation, 1 recovery)
+- False positives: **0** · false negatives (unsafe continuations): **1**
+- Unsafe continuations prevented: **23/24**
 - Safety probes denied (blocked/unknown/missing/stale/changed/unverified submit attempts): **6/6**
+- Uniform-false-evidence detection: **0/1** (measured boundary, see below)
 - Reruns produce byte-identical results.
 
 These are results on the current synthetic evaluation set, NOT a general
-accuracy claim. Known limitation: uniformly incorrect but internally
-consistent evidence may remain undetectable (see the report's senior review).
+accuracy claim. Measured limitation: uniformly incorrect but internally
+consistent evidence is NOT detected (CASE-011 concludes READY) — Preflight
+verifies consistency and workflow correctness across available evidence, not
+ground truth. The authorization boundary still holds: explicit approval
+remains mandatory even for that READY.
 
 The final evaluation will measure things such as:
 
@@ -240,7 +246,7 @@ Only measured results belong in the final results table. Never present targets a
 
 Current verified state:
 
-- Vitest: 127/127 PASS
+- Vitest: 131/131 PASS
 - Fixture evaluation: 8/8 PASS
 - Production build: PASS
 - Playwright E2E: 8/8 PASS

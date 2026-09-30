@@ -67,7 +67,8 @@ export function PipelinePanel({ run }: { run: PreflightRun }) {
       </p>
       {ready ? (
         <div className="pf-decision-body">
-          <p>Everything required for this application has been verified against the available evidence.</p>
+          <p>No blocking issues detected.</p>
+          <p className="pf-decision-sub">Evidence passed Preflight&apos;s defined validation checks.</p>
           <p className="pf-decision-counts">
             {run.documents.length} documents · {criticalFields} critical fields · {blocking} blocking findings
           </p>

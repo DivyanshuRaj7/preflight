@@ -4,6 +4,10 @@ Measured results live in `docs/EVALUATION_REPORT.md` (generated from
 `eval/results.json` via `npm run eval`). The sections below describe
 methodology; numbers live in the report, never the reverse.
 
+READY verdict semantics: in this evaluation, READY records that no
+blocking condition was detected under the defined rules — never that the
+underlying facts are objectively true. CASE-011 pins the distinction.
+
 ## Dataset
 The evaluation suite is deterministic synthetic data with ground-truth expected outcomes in `fixtures/manifest.json` and `fixtures/expected/`.
 

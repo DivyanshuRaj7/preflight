@@ -88,6 +88,11 @@ document is stale — fix it, do not work around it.
 - **Resulting state:** `BLOCK` or `ESCALATE` onto an existing terminal
   (`BLOCKED`, `ESCALATED`, `INVALIDATED`, `UNMAPPED`, `AMBIGUOUS`, `UNKNOWN`).
   Never a success state — enforced structurally, not by convention.
+- **Measured gap:** uniformly false but internally consistent evidence
+  (CASE-011) is NOT SUPPORTED: with no independent signal, the pipeline
+  concludes READY. The authorization boundary still holds (explicit approval
+  remains mandatory), but the READY itself is false. See §14 of the
+  evaluation report.
 - **Retry:** never.
 - **Human review:** required.
 - **Submission:** never.
