@@ -44,6 +44,10 @@ export async function clickSaveDraft(page: Page): Promise<void> {
   await page.getByTestId("save-draft").click();
 }
 
+export async function clickSubmitApplication(page: Page): Promise<void> {
+  await page.getByTestId("submit-application").click();
+}
+
 export async function readPortalState(page: Page): Promise<string> {
   return (await page.getByTestId("application-status").textContent())?.trim() ?? "";
 }

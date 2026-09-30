@@ -4,6 +4,7 @@ import { runPreflightCase, type PreflightRun } from "./pipeline.js";
 import { PreflightMark, MoonIcon, SunIcon } from "./Logo.js";
 import { WorkspaceHeader } from "./WorkspaceHeader.js";
 import { PipelinePanel } from "./PipelinePanel.js";
+import { ApprovalPanel } from "./ApprovalPanel.js";
 import { FindingList, type EvidenceSelection } from "./FindingList.js";
 import { EvidencePanel } from "./EvidencePanel.js";
 import { DocumentList } from "./DocumentList.js";
@@ -129,6 +130,7 @@ export function App() {
                   <h2 className="pf-section-title">Documents</h2>
                   <DocumentList documents={run.documents} />
                 </section>
+                {run.decision.status === "READY" ? <ApprovalPanel run={run} /> : null}
               </div>
               <div className="pf-evidence-pane">
                 <EvidencePanel finding={activeFinding} evidence={run.evidence} selectedId={selectedEvidence} />

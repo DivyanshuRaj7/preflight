@@ -214,8 +214,20 @@ Scope:
 Non-goals (later tasks): final Submit, approval, planning loop, LLM
 control. Execution stops at SAVED.
 
-## TASK-007 — Approval + controlled submission
-**Status:** TODO
+## TASK-007 — Human approval + synthetic submission
+**Status:** IN PROGRESS (current task)
+
+Scope:
+- Approval contract (AWAITING_APPROVAL/APPROVED/INVALIDATED), cyrb53 state
+  fingerprint, final review snapshot, extended submission authorization
+  (READY + VERIFIED/RECOVERED + SAVED + snapshot + fingerprint-bound
+  approval, typed denials).
+- Portal SUBMITTED + unknown-submit mode; adapter clickSubmit; E2E full
+  path, invalidation, and unknown-submission proofs with ordered traces.
+- Minimal console approval panel (review, explicit approve, verdict; no
+  submit control).
+
+Non-goals (later tasks): real portals, auth, planning loop, LLM control.
 
 ## TASK-008 — Failure injection + recovery
 **Status:** TODO

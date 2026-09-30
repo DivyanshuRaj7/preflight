@@ -38,7 +38,7 @@ Then read `TASKS.md`. Do not ask the coding agent to build the entire product at
 - AMBIGUOUS or UNMAPPED required fields cannot execute.
 - Browser actions are verified by reading the resulting DOM state.
 - Unknown execution states must be verified rather than blindly retried.
-- Final submission and human approval are intentionally outside the current execution milestone.
+- Human approval and synthetic submission are implemented against the local portal only; real-world submission remains out of scope.
 
 ## Current MVP
 
@@ -55,8 +55,12 @@ The current vertical slice covers a synthetic scholarship renewal workflow:
 9. Save Draft is allowed only after successful verification.
 10. The portal's SAVED state is independently verified.
 11. A confirmed miss gets exactly one bounded recovery; unknown state escalates instead of retrying.
+12. A final review snapshot fingerprints the exact state to be submitted.
+13. A human explicitly approves that exact state; any later change voids the approval.
+14. Submission is authorized only against a matching approval, then executed in the browser.
+15. The SUBMITTED state is independently verified; unknown final state escalates with no blind retry.
 
-The truthful terminal state is SAVED, not SUBMITTED. Final submission is not implemented yet.
+Submission exists ONLY against the local synthetic scholarship portal. There is no real government or production submission.
 
 ## Core architecture
 
@@ -80,15 +84,30 @@ Execution Plan
 Playwright Execution
         ↓
 State Verification
-    ├── EXPECTED → continue
-    ├── NOT REACHED → bounded recovery
-    └── UNKNOWN → escalate
-        ↓
-Independent Read-back
-        ↓
-Save Draft
-        ↓
-SAVED
+   ┌────┼────┐
+   ↓    ↓    ↓
+EXPECTED  RECOVER  UNKNOWN
+   ↓       ↓        ↓
+   │    VERIFY    ESCALATE
+   └───────┬────────┘
+           ↓
+         SAVED
+           ↓
+      FINAL REVIEW
+           ↓
+   AWAITING APPROVAL
+           ↓
+    HUMAN APPROVAL
+           ↓
+   FINGERPRINT CHECK
+           ↓
+        SUBMIT
+           ↓
+   FINAL STATE VERIFY
+           ↓
+       SUBMITTED
+           ↓
+        VERIFIED
 ```
 
 Central principle: **AI for ambiguity. Code for correctness.**
@@ -144,6 +163,12 @@ fixtures/
 docs/
 ```
 
+## Human approval boundary
+
+Submission requires explicit human approval tied to the exact reviewed application state.
+
+The approval contains a deterministic fingerprint of the reviewed state — a state integrity check, not cryptographic security. If a submission-relevant value changes after approval, approval becomes invalid. Therefore approved state ≠ current state means submission refused.
+
 ## Safety boundaries
 
 Preflight deliberately separates interpretation from correctness-critical decisions.
@@ -172,6 +197,12 @@ Failure handling is deterministic, not autonomous:
 - known recoverable failures use a bounded recovery policy (exactly one retry)
 - unknown state is preserved as uncertainty and escalated, never blindly retried
 - required AMBIGUOUS/UNMAPPED mappings cannot execute
+- no submission without explicit approval
+- approval is bound to the exact reviewed state
+- changed state invalidates approval
+- submission authorization is deterministic
+- final submission state is independently verified
+- unknown submission state is escalated rather than blindly retried
 
 The current implementation uses the deterministic baseline mapping and does not require a paid AI API.
 
@@ -195,10 +226,10 @@ Only measured results belong in the final results table. Never present targets a
 
 Current verified state:
 
-- Vitest: 101/101 PASS
+- Vitest: 113/113 PASS
 - Fixture evaluation: 8/8 PASS
 - Production build: PASS
-- Playwright E2E: 5/5 PASS
+- Playwright E2E: 8/8 PASS
 
 The browser suite currently covers:
 
@@ -207,6 +238,9 @@ The browser suite currently covers:
 - portal label drift
 - recoverable save failure (one bounded recovery)
 - unknown save state (escalation, no retry)
+- full approval → submission → verification
+- approval invalidation on state change
+- unknown submission (single attempt, escalation)
 - independent read-back
 - SAVED state
 - zero Submit interaction
@@ -222,7 +256,10 @@ Preflight records structured execution events so a failed run can explain:
 - whether recovery occurred
 - why escalation happened
 
-Unknown state results in escalation rather than blind retry.
+Unknown state results in escalation rather than blind retry. The same
+state-verification principle applies to final submission: the Submit action
+is not proof of a successful submission. The final browser state must be
+observed, and an unknown final state means STOP / ESCALATE.
 
 ## AI disclosure
 
@@ -247,11 +284,19 @@ Implemented:
 - unknown-state escalation
 - structured execution trace
 - Save Draft / SAVED verification
+- final review snapshot
+- human approval
+- approval fingerprint
+- approval invalidation
+- submission authorization
+- synthetic submission
+- final-state verification
+- unknown submission escalation
 
 Next milestone:
 
-- human approval gate
-- final submission workflow
+- broader failure injection and recovery coverage
+- evaluation expansion with measured baselines
 
 ## Demo
 

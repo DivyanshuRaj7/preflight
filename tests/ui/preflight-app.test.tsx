@@ -126,4 +126,16 @@ describe("preflight UI", () => {
     const direct = validateProfile(run.profile, run.evidence, { referenceDate: "2026-09-30" });
     expect(direct.issues.map((i) => i.ruleId)).toEqual(run.decision.issues.map((i) => i.ruleId));
   });
+
+  it("approves the exact reviewed state without any submit control", async () => {
+    const s = await runCase("CASE-001-clean");
+    const panel = await s.findByLabelText("Final review and approval");
+    const scope = within(panel);
+    expect(scope.getByText("Review the verified application state before approving submission.")).toBeInTheDocument();
+    fireEvent.click(scope.getByRole("button", { name: "Approve submission" }));
+    expect(await scope.findByText("APPROVED")).toBeInTheDocument();
+    expect(scope.getByText("Submission: not authorized —")).toBeInTheDocument();
+    // The console authorizes nothing and submits nothing.
+    expect(s.queryByRole("button", { name: /submit/i })).not.toBeInTheDocument();
+  });
 });

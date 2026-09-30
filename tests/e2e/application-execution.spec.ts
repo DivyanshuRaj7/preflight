@@ -52,5 +52,8 @@ test("application execution: validated profile fills and verifies the portal", a
   expect(result.saveDraftSucceeded).toBe(true);
   expect(result.portalState).toBe("SAVED");
   await expect(page.getByTestId("application-status")).toHaveText("SAVED");
-  await expect(page.getByRole("button", { name: /submit/i })).toHaveCount(0);
+  // The Submit control exists but this task never authorizes or invokes it:
+  // the portal provably never left SAVED and no submission occurred.
+  await expect(page.getByRole("button", { name: /submit application/i })).toBeVisible();
+  await expect(page.getByText("Application submitted")).toHaveCount(0);
 });

@@ -72,7 +72,16 @@ export type ExecutionEventType =
   | "RECOVERY_STARTED"
   | "RECOVERY_COMPLETED"
   | "ESCALATED"
-  | "EXECUTION_COMPLETED";
+  | "EXECUTION_COMPLETED"
+  | "FINAL_REVIEW_CREATED"
+  | "AWAITING_APPROVAL"
+  | "APPROVAL_GRANTED"
+  | "APPROVAL_INVALIDATED"
+  | "SUBMISSION_AUTHORIZED"
+  | "SUBMISSION_STARTED"
+  | "SUBMISSION_COMPLETED"
+  | "FINAL_STATE_VERIFIED"
+  | "SUBMISSION_ESCALATED";
 
 // One trace event: WHAT happened, WHY, WHAT state was observed, and WHAT
 // Preflight does next. Synthetic data only — never secrets or PII.

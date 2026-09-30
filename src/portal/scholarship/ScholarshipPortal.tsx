@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { initialPortalState, saveDraft } from "./portal-state.js";
+import { initialPortalState, saveDraft, submitApplication } from "./portal-state.js";
 import "./portal.css";
 
 // Synthetic Scholarship Renewal Portal (TASK-005A). A standalone fictional
@@ -33,6 +33,7 @@ export function ScholarshipPortal() {
   const [status, setStatus] = useState(initialPortalState);
   const [saveAttempts, setSaveAttempts] = useState(0);
   const [saveStuck, setSaveStuck] = useState(false);
+  const [submitStuck, setSubmitStuck] = useState(false);
   const [fullName, setFullName] = useState(DEMO_APPLICANT.fullName);
   const [dateOfBirth, setDateOfBirth] = useState(DEMO_APPLICANT.dateOfBirth);
   const [address, setAddress] = useState(DEMO_APPLICANT.address);
@@ -57,7 +58,26 @@ export function ScholarshipPortal() {
     setStatus(saveDraft());
   }
 
-  const visibleStatus = status === "SAVED" ? "SAVED" : saveStuck ? "SAVING…" : status;
+  function handleSubmitApplication(): void {
+    if (scenario === "unknown-submit") {
+      // Deterministic inconclusive submission: the request leaves and the
+      // final state never resolves. Never auto-retried by Preflight.
+      setSubmitStuck(true);
+      return;
+    }
+    setStatus(submitApplication());
+  }
+
+  const visibleStatus =
+    status === "SUBMITTED"
+      ? "SUBMITTED"
+      : status === "SAVED"
+        ? "SAVED"
+        : submitStuck
+          ? "SUBMITTING…"
+          : saveStuck
+            ? "SAVING…"
+            : status;
 
   return (
     <div className="sp-page">
@@ -176,6 +196,12 @@ export function ScholarshipPortal() {
             Save Draft
           </button>
           {status === "SAVED" ? <p className="sp-saved-note">Draft saved</p> : null}
+          {status === "SAVED" && !submitStuck ? (
+            <button type="button" data-testid="submit-application" onClick={handleSubmitApplication}>
+              Submit Application
+            </button>
+          ) : null}
+          {status === "SUBMITTED" ? <p className="sp-saved-note">Application submitted</p> : null}
         </div>
       </main>
     </div>

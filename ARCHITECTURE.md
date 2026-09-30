@@ -167,3 +167,28 @@ ACTION → OBSERVE ACTUAL STATE → KNOWN SUCCESS? → continue
 - Deterministic portal scenario modes (`?scenario=label-drift`,
   `flaky-save`, `unknown-save`) exercise drift tolerance, single recovery,
   and stop-on-unknown without randomness or network.
+
+### Human Approval + Synthetic Submission (TASK-007)
+
+```text
+SAVED
+  ↓
+FINAL REVIEW (snapshot + fingerprint of exact submitted values)
+  ↓
+AWAITING_APPROVAL (submission blocked until explicit human approval)
+  ↓
+APPROVED (record bound to the reviewed fingerprint)
+  ↓
+SUBMITTING (authorized click only)
+  ↓
+SUBMITTED (observed portal state)
+  ↓
+FINAL STATE VERIFICATION → VERIFIED
+```
+
+Rules: no path SAVED → SUBMITTING without explicit approval tied to the
+exact reviewed state — enforced in deterministic domain code, never by UI
+visibility. Any submission-relevant change produces a new fingerprint and
+voids prior approval (INVALIDATED). Unknown final state stops and escalates;
+Submit is never retried blindly. The synthetic portal exposes SUBMITTED (and
+an `unknown-submit` stuck mode); it knows nothing of approvals or fingerprints.

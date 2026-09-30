@@ -394,6 +394,19 @@ section { scroll-margin-top: 16px; }
 /* ---------- Documents ---------- */
 
 .pf-docs { margin-top: 40px; }
+
+/* Approval boundary: quiet review list, explicit action, visible verdict. */
+.pf-approval { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--hairline); }
+.pf-review-list { margin: 12px 0 0; }
+.pf-review-list > div { display: grid; grid-template-columns: minmax(140px, 220px) minmax(0, 1fr); gap: 4px 12px; padding: 6px 0; }
+.pf-review-list > div + div { border-top: 1px solid var(--hairline); }
+.pf-review-list dt { font-size: 12.5px; color: var(--ink-subtle); }
+.pf-review-list dd { margin: 0; font-size: 13.5px; overflow-wrap: anywhere; }
+.pf-review-list dd.mono { font-family: var(--font-mono); font-size: 12px; }
+.pf-approval .pf-btn { margin-top: 12px; }
+@media (max-width: 767px) {
+  .pf-review-list > div { grid-template-columns: minmax(0, 1fr); }
+}
 .pf-doc-list { list-style: none; margin: 8px 0 0; padding: 0; }
 .pf-doc-list > li { border-top: 1px solid var(--hairline); }
 .pf-doc-list > li:last-child { border-bottom: 1px solid var(--hairline); }
