@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "syntheticOnly": true,
+  "generator": "scripts/generate-synthetic-documents.py",
+  "documents": [
+    {
+      "documentId": "doc-identity",
+      "documentType": "identity",
+      "path": "fixtures/documents/doc-identity.png",
+      "expectedFields": {
+        "name": ["Full Name"],
+        "dateOfBirth": ["Date of Birth"],
+        "address": ["Address"]
+      },
+      "expectedTexts": ["Rina Das", "2004-05-17", "14 Lake Road, Kolkata 700029"]
+    },
+    {
+      "documentId": "doc-marksheet",
+      "documentType": "marksheet",
+      "path": "fixtures/documents/doc-marksheet.png",
+      "expectedFields": {
+        "name": ["Name"],
+        "dateOfBirth": ["Date of Birth"]
+      },
+      "expectedTexts": ["Rina Das", "2004-05-17"]
+    },
+    {
+      "documentId": "doc-income-certificate",
+      "documentType": "income-certificate",
+      "path": "fixtures/documents/doc-income-certificate.png",
+      "expectedFields": {
+        "name": ["Name"],
+        "annualFamilyIncome": ["Annual Family Income"],
+        "expiryDate": ["Valid Until"]
+      },
+      "expectedTexts": ["Rina Das", "180000", "2027-03-31"]
+    },
+    {
+      "documentId": "doc-bank-proof",
+      "documentType": "bank-proof",
+      "path": "fixtures/documents/doc-bank-proof.png",
+      "expectedFields": {
+        "name": ["Name"],
+        "bankAccountNumber": ["Bank Account Number"],
+        "address": ["Address"]
+      },
+      "expectedTexts": ["Rina Das", "SYNTHETIC-001234", "14 Lake Road, Kolkata 700029"]
+    }
+  ]
+}

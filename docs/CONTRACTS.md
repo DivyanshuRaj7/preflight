@@ -130,6 +130,27 @@ Rules:
 - Every extracted field cites evidence carrying document id, field, page/location when available, extraction method, and confidence.
 - Extraction answers "What did we extract?" It never answers "Is the application valid?" Validity, readiness, approval, and submission permission remain deterministic domain decisions.
 
+## 9b. OCR boundary (TASK-011)
+
+Real OCR plugs in below the extraction contract without changing it:
+
+```text
+image file → PaddleOcrProvider → OcrResult { lines[] } → fixture adapter → ExtractionResult
+```
+
+- `src/domain/ocr.ts` owns the neutral `OcrLine` / `OcrResult` /
+  `OcrProvider` types. The domain never imports PaddleOCR.
+- `OcrResult` preserves text, per-line confidence, bounding box (or null),
+  page, engine name, and engine version. OCR errors are typed
+  (`OCR_UNAVAILABLE` / `OCR_TIMEOUT` / `OCR_FAILED` / `OCR_UNREADABLE`).
+- `PaddleOcrExtractionProvider` runs OCR, then applies the labeled
+  DETERMINISTIC OCR FIXTURE ADAPTER ("Label: value" parsing against the
+  fixture manifest). PaddleOCR performs layout/text recognition only —
+  semantic field meaning comes from the fixture table, and the future
+  multimodal layer will replace that stage.
+- Provider selection is explicit: `OCR_PROVIDER=paddleocr`, otherwise the
+  deterministic stub. The stub remains the default for fast tests.
+
 ## 10. Validation engine
 
 `validateProfile(profile, evidence, options)` is a pure deterministic function:

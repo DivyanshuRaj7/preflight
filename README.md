@@ -132,6 +132,7 @@ READY verdict semantics: **READY means Preflight detected no blocking condition 
 - `npm run check` — TypeScript type checks.
 - `npm test` — Vitest unit, integration, and UI tests.
 - `npm run eval` — deterministic fixture evaluation.
+- `npm run eval:ocr` — real PaddleOCR over synthetic document images (needs `requirements-ocr.txt`).
 - `npm run dev` — start the Preflight UI and synthetic portal locally.
 - `npm run build` — production build of the frontend into `dist/`.
 - `npm run test:e2e` — Playwright browser suite (starts Vite automatically).
@@ -207,6 +208,16 @@ Failure handling is deterministic, not autonomous:
 - unknown submission state is escalated rather than blindly retried
 
 The current implementation uses the deterministic baseline mapping and does not require a paid AI API.
+
+Document ingestion runs real local PaddleOCR (paddleocr 3.7.0, CPU-only,
+`requirements-ocr.txt`) over synthetic document images in
+`fixtures/documents/`; semantic field interpretation is still the labeled
+deterministic fixture adapter, with multimodal extraction as the next
+milestone. OCR output (text, confidence, bounding boxes) flows into the
+existing extraction contract with full provenance — OCR never decides
+validity. Measure it separately with `npm run eval:ocr` (current: 4/4
+documents SUCCESS, all expected key texts detected, minimum confidence
+0.989).
 
 ## Evaluation
 

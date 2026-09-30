@@ -85,6 +85,16 @@ interface MultimodalProvider {
 }
 ```
 
+## OCR ingestion boundary
+
+Real document ingestion runs local PaddleOCR behind the existing
+`ExtractionProvider` contract (`OCR_PROVIDER=paddleocr`, stub by default).
+A narrow Python worker returns positioned text; a labeled deterministic
+fixture adapter maps known "Label: value" lines to fields. PaddleOCR
+performs recognition only — semantic interpretation belongs to the future
+multimodal layer, and validity belongs to deterministic validation, which
+is unchanged by this boundary.
+
 ## Failure injection
 
 Use one typed local-only scenario:

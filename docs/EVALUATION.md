@@ -32,6 +32,15 @@ Add portal drift and timeout to the execution/e2e suite when those layers exist.
 - Unsafe/unapproved submission prevention
 - Manual vs assisted completion time
 
+## OCR layer evaluation (separate from decision evaluation)
+
+`npm run eval:ocr` measures the OCR layer only: documents processed,
+OCR success/failure rate, expected-key-text detection, low-confidence
+cases, and typed processing failures. Current: 4/4 synthetic documents
+SUCCESS with all expected key texts detected. These are layer metrics —
+they do not replace the 28/29 decision evaluation, and no accuracy
+percentage beyond the measured per-document outcomes is claimed.
+
 ## Adversarial and boundary evaluation
 
 Beyond the manifest cases, `npm run eval` runs an adversarial gate over

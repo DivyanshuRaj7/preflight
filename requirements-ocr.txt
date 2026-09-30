@@ -1,0 +1,12 @@
+# Local OCR runtime for Preflight TASK-011. CPU-only, no paid services.
+# Tested with Python 3.13 on Windows. Fresh setup:
+#   pip install -r requirements-ocr.txt
+#   python scripts/generate-synthetic-documents.py   # (PNGs are committed; rerun only to regenerate)
+#   npm run eval:ocr
+#
+# First OCR run downloads PaddleOCR models (~100-300MB) into the user's
+# PaddleX cache (~/.paddlex); later runs are offline. If OCR is unavailable,
+# the provider returns typed OCR_UNAVAILABLE instead of guessing.
+paddleocr==3.7.0
+paddlepaddle==3.3.1
+pillow>=10.0.0

@@ -7,6 +7,7 @@
     "check": "tsc --noEmit",
     "test": "vitest run",
     "eval": "tsx scripts/run-evaluation.ts",
+    "eval:ocr": "tsx scripts/ocr-harness.ts",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
