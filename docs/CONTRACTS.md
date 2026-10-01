@@ -151,6 +151,24 @@ image file → PaddleOcrProvider → OcrResult { lines[] } → fixture adapter �
 - Provider selection is explicit: `OCR_PROVIDER=paddleocr`, otherwise the
   deterministic stub. The stub remains the default for fast tests.
 
+## 9c. Semantic interpretation boundary (TASK-012)
+
+`OcrResult` → `SemanticExtractionProvider` → validated `ExtractionResult`.
+The semantic layer proposes candidates (`field`, `value`,
+`semanticConfidence`, `sourceText`, `sourceLineIndex`); the converter
+trusts nothing until each candidate cites an OCR line that actually exists,
+verbatim. Malformed output, timeouts, and unavailable providers fail
+closed (`SEMANTIC_MALFORMED` / `SEMANTIC_TIMEOUT` / `SEMANTIC_UNAVAILABLE`);
+duplicate candidates mean ambiguity and are excluded, never merged;
+unsupported fields are ignored, never fabricated. Confidence discipline:
+`field.confidence` carries the semantic judgment,
+`evidence.confidence` carries the OCR measurement. Extra provider
+properties (including any "verdict") are never read — READY/BLOCKED comes
+only from deterministic validation. The development provider is
+deterministic and labeled as such; no model inference runs and no paid API
+is required. Selection: `EXTRACTION_PROVIDER=semantic` (legacy
+`OCR_PROVIDER=paddleocr` still selects the fixture-label adapter).
+
 ## 10. Validation engine
 
 `validateProfile(profile, evidence, options)` is a pure deterministic function:

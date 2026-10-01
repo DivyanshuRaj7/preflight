@@ -39,3 +39,7 @@ A milestone is complete only when:
   3.3.1, CPU, `requirements-ocr.txt`) behind the existing
   ExtractionProvider boundary; deterministic stub retained for fast tests;
   `npm run eval:ocr` measures the OCR layer separately from decision eval.
+- TASK-012: semantic interpretation boundary (provider interface +
+  deterministic dev provider + validating converter); untrusted candidates
+  with provenance; fixture provider survives; no model inference, no paid
+  API.

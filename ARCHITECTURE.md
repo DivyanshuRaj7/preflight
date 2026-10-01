@@ -95,6 +95,16 @@ performs recognition only — semantic interpretation belongs to the future
 multimodal layer, and validity belongs to deterministic validation, which
 is unchanged by this boundary.
 
+## Semantic interpretation boundary (TASK-012)
+
+OCR lines enter a `SemanticExtractionProvider` that returns candidates
+with provenance (`sourceText`, `sourceLineIndex`, semantic confidence);
+a converter validates every citation against actual OCR output and emits
+the existing `ExtractionResult`. The development provider is deterministic
+and labeled; model output — real or stubbed — is untrusted data that can
+never authorize, validate, or submit. `EXTRACTION_PROVIDER=semantic`
+selects it; the fixture provider survives for fast deterministic tests.
+
 ## Failure injection
 
 Use one typed local-only scenario:

@@ -41,6 +41,10 @@ SUCCESS with all expected key texts detected. These are layer metrics —
 they do not replace the 28/29 decision evaluation, and no accuracy
 percentage beyond the measured per-document outcomes is claimed.
 
+Semantic interpretation is exercised by unit/integration tests, not by a
+model-accuracy metric: no model inference runs in this milestone, so no
+"AI accuracy" is reported.
+
 ## Adversarial and boundary evaluation
 
 Beyond the manifest cases, `npm run eval` runs an adversarial gate over

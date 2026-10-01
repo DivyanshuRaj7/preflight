@@ -211,13 +211,14 @@ The current implementation uses the deterministic baseline mapping and does not 
 
 Document ingestion runs real local PaddleOCR (paddleocr 3.7.0, CPU-only,
 `requirements-ocr.txt`) over synthetic document images in
-`fixtures/documents/`; semantic field interpretation is still the labeled
-deterministic fixture adapter, with multimodal extraction as the next
-milestone. OCR output (text, confidence, bounding boxes) flows into the
+`fixtures/documents/`; OCR output (text, confidence, bounding boxes) flows into the
 existing extraction contract with full provenance — OCR never decides
-validity. Measure it separately with `npm run eval:ocr` (current: 4/4
-documents SUCCESS, all expected key texts detected, minimum confidence
-0.989).
+validity. A deterministic semantic provider exercises the interpretation
+boundary (`EXTRACTION_PROVIDER=semantic`); model output is untrusted data
+and deterministic validation remains the only READY/BLOCKED authority. The
+multimodal model layer is a future milestone. Measure ingestion separately
+with `npm run eval:ocr` (current: 4/4 documents SUCCESS, all expected key
+texts detected, minimum confidence 0.989).
 
 ## Evaluation
 
