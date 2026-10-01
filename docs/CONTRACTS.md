@@ -164,9 +164,12 @@ unsupported fields are ignored, never fabricated. Confidence discipline:
 `field.confidence` carries the semantic judgment,
 `evidence.confidence` carries the OCR measurement. Extra provider
 properties (including any "verdict") are never read — READY/BLOCKED comes
-only from deterministic validation. The development provider is
-deterministic and labeled as such; no model inference runs and no paid API
-is required. Selection: `EXTRACTION_PROVIDER=semantic` (legacy
+only from deterministic validation. The deterministic development provider
+is the default; optional OpenRouter, Google Gemini REST, or Groq direct-API
+providers (`SEMANTIC_PROVIDER=openrouter|gemini|groq`, each key-gated,
+fetch-only, no SDKs) implement
+the same interface for live inference without changing any rule above.
+Selection: `EXTRACTION_PROVIDER=semantic` (legacy
 `OCR_PROVIDER=paddleocr` still selects the fixture-label adapter).
 
 ## 10. Validation engine

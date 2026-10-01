@@ -35,7 +35,7 @@ export type SemanticInterpretation = {
 export interface SemanticExtractionProvider {
   readonly name: string;
   interpret(
-    input: { documentId: string; documentType?: DocumentType },
+    input: { documentId: string; documentType?: string; imagePath?: string },
     ocr: OcrResult,
   ): Promise<SemanticInterpretation> | SemanticInterpretation;
 }

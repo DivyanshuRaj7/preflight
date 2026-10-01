@@ -42,8 +42,9 @@ they do not replace the 28/29 decision evaluation, and no accuracy
 percentage beyond the measured per-document outcomes is claimed.
 
 Semantic interpretation is exercised by unit/integration tests, not by a
-model-accuracy metric: no model inference runs in this milestone, so no
-"AI accuracy" is reported.
+model-accuracy metric: the deterministic provider runs by default, and live
+OpenRouter inference is opt-in only — so no "AI accuracy" is reported
+unless a measured live run exists.
 
 ## Adversarial and boundary evaluation
 

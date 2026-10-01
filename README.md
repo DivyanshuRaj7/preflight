@@ -214,9 +214,19 @@ Document ingestion runs real local PaddleOCR (paddleocr 3.7.0, CPU-only,
 `fixtures/documents/`; OCR output (text, confidence, bounding boxes) flows into the
 existing extraction contract with full provenance — OCR never decides
 validity. A deterministic semantic provider exercises the interpretation
-boundary (`EXTRACTION_PROVIDER=semantic`); model output is untrusted data
-and deterministic validation remains the only READY/BLOCKED authority. The
-multimodal model layer is a future milestone. Measure ingestion separately
+boundary (`EXTRACTION_PROVIDER=semantic`) with zero credentials; model output
+is untrusted data and deterministic validation remains the only READY/BLOCKED
+authority. Three live-capable semantic providers implement the same
+contract, all opt-in and untrusted by design: OpenRouter
+(`SEMANTIC_PROVIDER=openrouter`), Google Gemini REST
+(`SEMANTIC_PROVIDER=gemini`), and Groq direct API
+(`SEMANTIC_PROVIDER=groq`); model identifiers stay configurable and keys
+stay local. Real multimodal inference was observed (Gemini and Groq
+returned validated candidates on the synthetic identity document), but
+free-provider rate limiting and availability prevented a reliable
+full-document benchmark — so no live accuracy percentage is claimed.
+Deterministic validation remains the only READY/BLOCKED authority.
+Measure ingestion separately
 with `npm run eval:ocr` (current: 4/4 documents SUCCESS, all expected key
 texts detected, minimum confidence 0.989).
 

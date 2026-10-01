@@ -295,9 +295,9 @@ describe("factory semantic kind", () => {
     expect(provider.name).toBe("semantic-extraction");
   });
 
-  it("refuses semantic selection without all three dependencies", () => {
+  it("refuses semantic selection without OCR and fixture documents", () => {
     expect(() =>
       createExtractionProvider("semantic", { stubDocuments: {}, ocrDocuments: {} }),
-    ).toThrow(/requires an OcrProvider, a SemanticExtractionProvider/);
+    ).toThrow(/requires an OcrProvider and semantic fixture documents/);
   });
 });

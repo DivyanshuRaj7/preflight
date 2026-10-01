@@ -43,3 +43,8 @@ A milestone is complete only when:
   deterministic dev provider + validating converter); untrusted candidates
   with provenance; fixture provider survives; no model inference, no paid
   API.
+- TASK-013: optional live semantic providers sharing one contract —
+  OpenRouter, Google Gemini REST, Groq direct API (all key-gated,
+  fetch-only, strict JSON, mocked tests); deterministic remains default.
+  Live smoke runs observed real candidates (Gemini, Groq) without a
+  benchmark-grade sample.

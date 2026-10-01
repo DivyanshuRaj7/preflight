@@ -95,14 +95,20 @@ performs recognition only — semantic interpretation belongs to the future
 multimodal layer, and validity belongs to deterministic validation, which
 is unchanged by this boundary.
 
-## Semantic interpretation boundary (TASK-012)
+## Semantic interpretation boundary (TASK-012, live provider TASK-013)
 
 OCR lines enter a `SemanticExtractionProvider` that returns candidates
 with provenance (`sourceText`, `sourceLineIndex`, semantic confidence);
 a converter validates every citation against actual OCR output and emits
-the existing `ExtractionResult`. The development provider is deterministic
-and labeled; model output — real or stubbed — is untrusted data that can
-never authorize, validate, or submit. `EXTRACTION_PROVIDER=semantic`
+the existing `ExtractionResult`. The deterministic development provider is
+the default; optional OpenRouter (`SEMANTIC_PROVIDER=openrouter`),
+Google Gemini REST (`SEMANTIC_PROVIDER=gemini`), and Groq direct-API
+(`SEMANTIC_PROVIDER=groq`) providers implement the same interface for live
+inference (all key-gated, fetch-only, no SDKs). Live smoke runs observed
+real candidates from Gemini and Groq on synthetic documents, but
+free-provider rate limits prevented a reliable benchmark — no accuracy is
+claimed. Model output — real or stubbed — is untrusted data that
+can never authorize, validate, or submit. `EXTRACTION_PROVIDER=semantic`
 selects it; the fixture provider survives for fast deterministic tests.
 
 ## Failure injection

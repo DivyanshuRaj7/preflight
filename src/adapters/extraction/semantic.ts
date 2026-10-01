@@ -40,6 +40,15 @@ const DEFAULT_LOW_CONFIDENCE = 0.75;
 const DEFAULT_MIN_SEMANTIC_CONFIDENCE = 0.5;
 const DEFAULT_SEMANTIC_TIMEOUT_MS = 30_000;
 
+const SEMANTIC_FAILURE_CODES = ["SEMANTIC_TIMEOUT", "SEMANTIC_MALFORMED", "SEMANTIC_UNAVAILABLE"] as const;
+
+function semanticFailureCode(error: unknown): string {
+  const code = (error as { code?: unknown } | null)?.code;
+  if (typeof code === "string" && (SEMANTIC_FAILURE_CODES as readonly string[]).includes(code)) return code;
+  if (error instanceof Error && error.message.includes("SEMANTIC_TIMEOUT")) return "SEMANTIC_TIMEOUT";
+  return "SEMANTIC_UNAVAILABLE";
+}
+
 export class SemanticExtractionProvider implements ExtractionProvider {
   readonly name = SEMANTIC_EXTRACTION_PROVIDER_NAME;
   private readonly ocr: OcrProvider;
@@ -79,10 +88,26 @@ export class SemanticExtractionProvider implements ExtractionProvider {
     let interpretation;
     try {
       interpretation = await this.withTimeout(
-        this.semantic.interpret({ documentId: input.documentId, documentType: configured.documentType }, ocrResult),
+        this.semantic.interpret(
+          { documentId: input.documentId, documentType: configured.documentType, imagePath: configured.imagePath },
+          ocrResult,
+        ),
       );
     } catch (error) {
-      const code = error instanceof Error && error.message === "SEMANTIC_TIMEOUT" ? "SEMANTIC_TIMEOUT" : "SEMANTIC_UNAVAILABLE";
+      // Preserve explicit provider codes (e.g. SEMANTIC_MALFORMED); timeouts
+      // are recognized by code or message. Anything else is an
+      // unavailable-provider failure.
+      const maybeCode = (error as unknown as { code?: unknown }).code;
+      const code =
+        error instanceof Error &&
+        (maybeCode === "SEMANTIC_TIMEOUT" ||
+          maybeCode === "SEMANTIC_MALFORMED" ||
+          maybeCode === "SEMANTIC_UNAVAILABLE" ||
+          error.message.includes("SEMANTIC_TIMEOUT"))
+          ? (maybeCode === "SEMANTIC_TIMEOUT" || error.message.includes("SEMANTIC_TIMEOUT")
+              ? "SEMANTIC_TIMEOUT"
+              : (maybeCode as string))
+          : "SEMANTIC_UNAVAILABLE";
       return this.failed(input.documentId, configured.documentType, "ocr", code, error instanceof Error ? error.message : "Semantic provider failed.");
     }
     if (!interpretation || !Array.isArray(interpretation.candidates) || !interpretation.candidates.every(isValidCandidateShape)) {
