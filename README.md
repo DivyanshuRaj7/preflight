@@ -12,6 +12,8 @@ Preflight is a BFWAI/HACK 26 PS-01 MVP: a reliability layer for high-stakes digi
 
 ## Quick start
 
+Development:
+
 ```bash
 npm install
 npm run check
@@ -27,18 +29,63 @@ Playwright Chromium may need to be installed once on a fresh clone:
 npx playwright install chromium
 ```
 
-Then read `TASKS.md`. Do not ask the coding agent to build the entire product at once.
+Production browser-agent runtime (Node + real Chromium):
+
+```bash
+npm install
+npx playwright install chromium
+npm run build
+npm run build:server
+npm start
+```
+
+The production server serves the built console and portal plus `POST
+/api/execute`. Static-only hosting cannot run the browser agent — the UI
+shows its unavailable state there instead of pretending. No API keys are
+required for Demo Mode.
 
 ## Judge / Demo Mode
 
 1. Open the deployed URL.
-2. Select a synthetic case (CASE-001 clean through CASE-006 low-confidence).
-3. Click Run Preflight.
-4. Inspect the evidence/result.
-5. For READY, open the synthetic scholarship application.
-6. No upload or personal data is required.
+2. Select CASE-002 and run Preflight.
+3. Observe BLOCKED + NAME_MISMATCH evidence.
+4. Select CASE-001 and run Preflight.
+5. Observe READY.
+6. Open the synthetic scholarship application.
+7. Run the browser agent.
+8. Observe real execution, not a simulation:
+   - portal inspection
+   - semantic field mapping
+   - 6 values entered
+   - 6 values independently read back
+   - draft saved
+   - portal state verified as SAVED
+9. Review the verified application.
+10. Explicitly approve the exact verified state.
+11. Observe submission and final-state verification.
 
-Demo Mode uses bundled synthetic fixtures and the same Preflight validation pipeline used by the project evaluation. It performs no live LLM inference.
+Completion is not correctness: every step above is verified against
+observed state, never assumed from a completed action. No upload or
+personal data is required.
+
+Demo Mode uses bundled synthetic fixtures and the same Preflight validation
+pipeline used by the project evaluation. It performs no live LLM inference.
+
+## Final demo sequence
+
+```text
+CASE-002 → BLOCKED / name mismatch
+  ↓
+CASE-001 → READY
+  ↓
+Open Application → Browser Agent
+  ↓
+Inspect → Map → Fill → Read Back → Save → Verify → SAVED
+  ↓
+Human Review → Approval → SUBMITTED → VERIFIED
+```
+
+See [docs/DEMO.md](docs/DEMO.md) for the fixed 3-minute sequence.
 
 ## Project rules
 
@@ -127,6 +174,20 @@ Semantic interpretation (what a portal label means) is isolated from determinist
 
 READY verdict semantics: **READY means Preflight detected no blocking condition under its defined validation and evidence-consistency rules.** It does not mean the information is objectively true, that all extracted values are guaranteed correct, or that the application is guaranteed to be accepted. Consistency and validation are not independent ground truth.
 
+## Browser Agent
+
+Preflight uses Playwright to operate the synthetic scholarship portal after deterministic validation passes.
+
+```text
+READY → inspect portal → semantic field mapping → execution plan
+  → fill fields → independently read values back → save draft
+  → verify SAVED → human approval
+```
+
+The browser agent does not treat "no exception thrown" as success. It verifies the resulting DOM state independently.
+
+Production execution is exposed through `POST /api/execute`. The same execution service is shared by the development and production runtime; there is no duplicate browser-execution engine.
+
 ## Core documents
 
 - `PRD.md` — product requirements and scope.
@@ -146,9 +207,35 @@ READY verdict semantics: **READY means Preflight detected no blocking condition 
 - `npm run eval:ocr` — real PaddleOCR over synthetic document images (needs `requirements-ocr.txt`).
 - `npm run dev` — start the Preflight UI and synthetic portal locally.
 - `npm run build` — production build of the frontend into `dist/`.
+- `npm run build:server` — bundle the production Node runtime into `dist-server/` (serves `dist/`, the portal, and `/api/execute`).
+- `npm start` — run the production server (`PORT`/`HOST` env, defaults 4173/0.0.0.0).
+- `npm run demo:browser` — live browser-agent demo in a terminal (same real execution as the UI bridge; `-- --headed`, `--scenario=flaky-save` supported).
 - `npm run test:e2e` — Playwright browser suite (starts Vite automatically).
 - `npm run test:e2e:headed` — same suite in a visible browser for debugging.
 - `npm run demo:reset` — reset local synthetic demo state.
+
+## Production deployment
+
+The final browser-agent runtime requires:
+
+- Node.js 22
+- Playwright + Chromium (`npx playwright install chromium`)
+- a host capable of running a persistent Node process
+
+```bash
+npm install
+npx playwright install chromium
+npm run build
+npm run build:server
+npm start
+```
+
+Endpoints:
+
+- `GET /api/health`
+- `POST /api/execute`
+
+Static-only hosts cannot run the browser-agent runtime. No hosting platform is claimed beyond what is verified here: the production server path above, smoke-tested end to end.
 
 ## Project structure
 
@@ -257,32 +344,24 @@ naive baseline (`docs/BASELINE.md`, full report in
 - Reruns produce byte-identical results.
 
 These are results on the current synthetic evaluation set, NOT a general
-accuracy claim. Measured limitation: uniformly incorrect but internally
-consistent evidence is NOT detected (CASE-011 concludes READY) — Preflight
-verifies consistency and workflow correctness across available evidence, not
-ground truth. The authorization boundary still holds: explicit approval
-remains mandatory even for that READY.
-
-The final evaluation will measure things such as:
-
-- extraction accuracy
-- conflict detection
-- missing/invalid document handling
-- browser execution success
-- verification failures
-- recovery behavior
-- unsafe submission prevention
-
-Only measured results belong in the final results table. Never present targets as measured results.
+accuracy claim. On the standard 28-case set the result is 28/28 correct; the
+29th case (CASE-011) is a documented boundary: uniformly incorrect but
+internally consistent evidence is NOT detected (CASE-011 concludes READY) —
+Preflight verifies consistency and workflow correctness across available
+evidence, not ground truth. The authorization boundary still holds: explicit
+approval remains mandatory even for that READY.
 
 ## Testing
 
 Current verified state:
 
-- Vitest: 131/131 PASS
-- Fixture evaluation: 8/8 PASS
-- Production build: PASS
-- Playwright E2E: 8/8 PASS
+- `npm run check` — PASS
+- `npm test` — 226/226 PASS
+- `npm run build` — PASS
+- `npm run build:server` — PASS
+- `npm run test:e2e` — 10/10 PASS
+- `npm run eval` — 28/29 (the 1 miss is the documented CASE-011 uniform-consistency boundary)
+- `npm run eval:ocr` — 4/4 PASS
 
 The browser suite currently covers:
 
@@ -316,40 +395,48 @@ observed, and an unknown final state means STOP / ESCALATE.
 
 ## AI disclosure
 
-Record the AI models, APIs, coding agents, and AI tools used during the challenge. Current project development includes AI-assisted coding through OpenCode/Muse. Keep this section updated as the build progresses.
+Development:
+
+- OpenCode / Muse was used for AI-assisted implementation.
+
+Runtime:
+
+- Demo Mode uses bundled deterministic synthetic fixtures and does not require live LLM inference.
+- PaddleOCR performs local document OCR.
+- The semantic extraction boundary supports optional OpenRouter, Google Gemini, and Groq providers.
+- Runtime model identifiers are configurable.
+- Deterministic validation remains the authority for READY/BLOCKED, authorization, and submission safety.
+- Live multimodal inference was tested (Gemini and Groq returned validated candidates on the synthetic identity document), but provider availability/rate limiting prevented a reliable full-document benchmark — no live accuracy percentage is claimed.
 
 ## Current status
 
-Implemented:
+The final MVP includes:
 
-- deterministic document/extraction boundary
+- synthetic document ingestion
+- PaddleOCR boundary
 - canonical applicant profile
 - deterministic validation
 - evidence/provenance handling
-- synthetic scholarship portal
-- Playwright browser infrastructure
 - semantic portal-field mapping
-- validated browser execution
+- real Playwright browser execution
 - independent read-back verification
-- label drift handling
-- actual state verification
+- label-drift recovery
 - bounded recovery
 - unknown-state escalation
 - structured execution trace
-- Save Draft / SAVED verification
+- SAVED state verification
 - final review snapshot
-- human approval
-- approval fingerprint
+- human approval gate
+- state fingerprint
 - approval invalidation
 - submission authorization
 - synthetic submission
 - final-state verification
-- unknown submission escalation
+- production Node runtime
+- production `/api/execute` browser-agent bridge
+- evaluation harness
 
-Next milestone:
-
-- broader failure injection and recovery coverage
-- evaluation expansion with measured baselines
+Final MVP — demo and submission ready.
 
 ## Demo
 
