@@ -216,10 +216,15 @@ Production execution is exposed through `POST /api/execute`. The same execution 
 
 ## Production deployment
 
+Primary: **Vercel Functions (container image)**. Vercel auto-detects the
+root-level `Dockerfile.vercel`, builds it into VCR, and routes all traffic
+to the resulting function — no `vercel.json` needed for the single service.
+
 The final browser-agent runtime requires:
 
-- Node.js 22
-- Playwright + Chromium (`npx playwright install chromium`)
+- Node.js 22 (or newer; the Playwright base image ships its own Node)
+- Playwright + Chromium (baked into `mcr.microsoft.com/playwright:v1.63.0-noble`,
+  matched to the installed `@playwright/test` 1.63.0)
 - a host capable of running a persistent Node process
 
 ```bash
@@ -235,7 +240,20 @@ Endpoints:
 - `GET /api/health`
 - `POST /api/execute`
 
-Static-only hosts cannot run the browser-agent runtime. No hosting platform is claimed beyond what is verified here: the production server path above, smoke-tested end to end.
+Notes and limits:
+
+- The container listens on Vercel's `$PORT` (default 80) and binds `0.0.0.0`
+  — no code change was needed; the existing server already reads `PORT`.
+- The image is ~2.8 GB uncompressed (Chromium), so the Vercel project must
+  use **Large Functions** (public beta, up to 5 GB uncompressed; new projects
+  are auto-enrolled, older ones set `VERCEL_SUPPORT_LARGE_FUNCTIONS=1`).
+- No secrets or env vars are required for Demo Mode. Do not add any.
+- A `Dockerfile` for Railway-style Docker hosts is also present and uses the
+  identical stack and start command (`npm start`).
+- Static-only hosts cannot run the browser-agent runtime. No hosting platform
+  is claimed beyond what is verified here: the production server path above,
+  smoke-tested end to end, including a full Chromium run inside the
+  `Dockerfile.vercel` image.
 
 ## Project structure
 

@@ -1,0 +1,30 @@
+# Preflight on Vercel Functions (container image).
+#
+# Vercel auto-detects this root-level Dockerfile.vercel, builds the image,
+# stores it in VCR, and routes all traffic to the resulting function.
+# Same stack as the Railway Dockerfile: Playwright base image (Chromium +
+# Linux deps, matched to the installed @playwright/test 1.63.0), reproducible
+# install, frontend + server builds, then the EXISTING production server.
+# The server reads Vercel's $PORT (default 80) and binds 0.0.0.0 already —
+# no code change was needed for Vercel. No secrets required for Demo Mode.
+#
+# NOTE: this image is ~2.8 GB uncompressed (Chromium), so the project must
+# use Vercel Large Functions (public beta, up to 5 GB uncompressed; new
+# projects are auto-enrolled, older ones set VERCEL_SUPPORT_LARGE_FUNCTIONS=1).
+FROM mcr.microsoft.com/playwright:v1.63.0-noble
+
+WORKDIR /app
+
+# Reproducible dependency install first (better layer caching).
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Build frontend + production server bundle.
+COPY . .
+RUN npm run build && npm run build:server
+
+ENV HOST=0.0.0.0
+EXPOSE 80
+
+# Existing production server: static dist + portal + /api/health + /api/execute.
+CMD ["npm", "start"]
