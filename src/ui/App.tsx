@@ -128,6 +128,7 @@ export function App() {
             <section id="documents" className="pf-docs" aria-label="Case documents">
               <h2 className="pf-section-title">Documents</h2>
               <DocumentList documents={run.documents} />
+              <p className="pf-docs-more">Additional document types will be added.</p>
             </section>
             {run.decision.status === "READY" ? <ApprovalPanel run={run} /> : null}
           </>

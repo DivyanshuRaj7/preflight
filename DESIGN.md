@@ -137,9 +137,10 @@ captions never carry essential meaning alone.
 ```
 
 - TopBar 56px, single line, no mega-nav.
-- **Brand mark:** geometric ink tile with a verification check whose long arm
-  overshoots into a flight path, plus "Preflight" wordmark and "The
-  Application Compiler" descriptor. Own identity; no borrowed marks.
+- **Brand mark:** monochrome document tile with extracted lines, motion ticks
+  at its left edge, and a verification check badge overlapping the corner,
+  plus "Preflight" wordmark and "The Application Compiler" descriptor. Own
+  identity; no borrowed marks, no gradients.
 - **No sidebar.** Rationale: Preflight is a single-workspace verification
   tool, not a multi-section app. A sidebar of anchor links adds chrome
   without function; section order (findings → documents, evidence aside)
