@@ -157,7 +157,9 @@ describe("preflight UI", () => {
     const panel = await s.findByLabelText("Final review and approval");
     const scope = within(panel);
     expect(scope.getByText("Review the verified application state before approving submission.")).toBeInTheDocument();
-    fireEvent.click(scope.getByRole("button", { name: "Approve submission" }));
+    fireEvent.click(scope.getByRole("button", { name: /review verified application/i }));
+    const dialog = within(await s.findByRole("dialog"));
+    fireEvent.click(dialog.getByRole("button", { name: "Approve submission" }));
     expect(await scope.findByText("APPROVED")).toBeInTheDocument();
     expect(scope.getByText("Submission: not authorized —")).toBeInTheDocument();
     expect(scope.getByText(/Approval covers this reviewed state/)).toBeInTheDocument();

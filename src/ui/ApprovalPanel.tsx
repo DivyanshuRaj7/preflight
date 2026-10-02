@@ -1,19 +1,44 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { authorizeSubmission } from "../domain/submission/authorize.js";
 import { checkApproval, grantApproval } from "../domain/submission/approval.js";
-import { buildReviewSnapshot } from "../domain/submission/review.js";
+import { buildReviewSnapshot, type ReviewSnapshot } from "../domain/submission/review.js";
 import type { ApprovalRecord } from "../domain/submission/approval.js";
 import type { PreflightRun } from "./pipeline.js";
 
-// Minimal approval boundary UI (TASK-007). Shows the final review a human
-// must read before approving, records an explicit approval bound to the
-// review fingerprint, and presents the domain authorization verdict. This
-// console performs no browser execution, so authorization honestly reports
-// what is missing. It never submits anything.
+// Compact review trigger + modal dialog around the existing approval flow
+// (TASK: premium review interaction). The approval state machine is
+// untouched: explicit grant bound to the snapshot fingerprint, domain
+// authorization verdict, invalidation on change. The modal is presentation
+// only — it never approves, authorizes, or submits anything by itself.
+function humanizeField(field: string): string {
+  const words = field.replace(/([a-z0-9])([A-Z])/g, "$1 $2").toLowerCase();
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}
+
+function ChevronIcon() {
+  return (
+    <svg viewBox="0 0 12 12" aria-hidden="true" className="pf-trigger-chevron">
+      <path d="M4.5 2.5l3.5 3.5-3.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg viewBox="0 0 12 12" aria-hidden="true">
+      <path d="M2.5 2.5l7 7M9.5 2.5l-7 7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function ApprovalPanel({ run }: { run: PreflightRun }) {
   const [approval, setApproval] = useState<ApprovalRecord | null>(null);
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
-  let snapshot = null;
+  let snapshot: ReviewSnapshot | null = null;
   let snapshotError: string | null = null;
   try {
     snapshot = buildReviewSnapshot({
@@ -39,6 +64,59 @@ export function ApprovalPanel({ run }: { run: PreflightRun }) {
         })
       : null;
 
+  // Dialog lifecycle: move focus in, trap Tab, close on Escape, lock the
+  // background scroll, and return focus to the trigger on close. Closing
+  // never touches approval state — that stays with the state machine.
+  useEffect(() => {
+    if (!open) return;
+    const dialog = dialogRef.current;
+    const trigger = triggerRef.current;
+    dialog?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.stopPropagation();
+        setOpen(false);
+        return;
+      }
+      if (event.key !== "Tab" || !dialog) return;
+      const items = [...dialog.querySelectorAll<HTMLElement>("button, [href]")].filter(
+        (el) => !el.hasAttribute("disabled"),
+      );
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown, true);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown, true);
+      document.body.style.overflow = previousOverflow;
+      trigger?.focus();
+    };
+  }, [open ]);
+
+  function approve() {
+    if (!snapshot) return;
+    setApproval(
+      grantApproval({
+        applicationId: snapshot.applicationId,
+        fingerprint: snapshot.fingerprint,
+        approvedAt: new Date().toISOString(),
+      }),
+    );
+    setOpen(false);
+  }
+
+  const fieldCount = snapshot ? Object.keys(snapshot.values).length : 0;
+
   return (
     <section className="pf-approval" aria-label="Final review and approval">
       <h2 className="pf-section-title">Final review</h2>
@@ -47,56 +125,13 @@ export function ApprovalPanel({ run }: { run: PreflightRun }) {
         <p className="pf-summary">{snapshotError ?? "Review unavailable."}</p>
       ) : (
         <>
-          <p className="pf-review-state">
-            Verified state · <strong>{snapshot.preflightStatus}</strong>
-            <span aria-hidden="true"> · </span>Portal state · <strong>{snapshot.portalState}</strong>
-          </p>
-          <details className="pf-review-details">
-            <summary>Review before approval</summary>
-            <dl className="pf-review-list">
-              <div>
-                <dt>Application</dt>
-                <dd translate="no">{snapshot.applicationId}</dd>
-              </div>
-              <div>
-                <dt>Validation</dt>
-                <dd>{snapshot.preflightStatus}</dd>
-              </div>
-              <div>
-                <dt>Portal state</dt>
-                <dd>{snapshot.portalState}</dd>
-              </div>
-              {(
-                Object.entries(snapshot.values) as [string, string][]
-              ).map(([field, value]) => (
-                <div key={field}>
-                  <dt translate="no">{field}</dt>
-                  <dd>{value}</dd>
-                </div>
-              ))}
-              <div>
-                <dt>State fingerprint</dt>
-                <dd className="mono" translate="no">
-                  {snapshot.fingerprint}
-                </dd>
-              </div>
-            </dl>
-          </details>
           {approval === null ? (
-            <button
-              type="button"
-              className="pf-btn"
-              onClick={() =>
-                setApproval(
-                  grantApproval({
-                    applicationId: snapshot.applicationId,
-                    fingerprint: snapshot.fingerprint,
-                    approvedAt: new Date().toISOString(),
-                  }),
-                )
-              }
-            >
-              Approve submission
+            <button ref={triggerRef} type="button" className="pf-review-trigger" onClick={() => setOpen(true)}>
+              <ChevronIcon />
+              <span className="pf-review-trigger-text">Review verified application</span>
+              <span className="pf-review-trigger-meta" translate="no">
+                {snapshot.preflightStatus} · {snapshot.portalState} · {fieldCount} fields
+              </span>
             </button>
           ) : (
             <p className="pf-summary">
@@ -120,6 +155,78 @@ export function ApprovalPanel({ run }: { run: PreflightRun }) {
               </p>
             </>
           ) : null}
+          {open
+            ? createPortal(
+                <div
+                  className="pf-modal-backdrop"
+                  onClick={(event) => {
+                    if (event.target === event.currentTarget) setOpen(false);
+                  }}
+                >
+                  <div
+                    ref={dialogRef}
+                    className="pf-modal"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="pf-review-title"
+                    tabIndex={-1}
+                  >
+                    <div className="pf-modal-head">
+                      <div>
+                        <p className="pf-modal-eyebrow">Verified application</p>
+                        <h2 id="pf-review-title" className="pf-modal-title" translate="no">
+                          {snapshot.applicationId}
+                        </h2>
+                        <p className="pf-modal-states" translate="no">
+                          {snapshot.preflightStatus} · {snapshot.portalState}
+                        </p>
+                      </div>
+                      <button type="button" className="pf-modal-close" aria-label="Close review dialog" onClick={() => setOpen(false)}>
+                        <CloseIcon />
+                      </button>
+                    </div>
+                    <dl className="pf-review-list">
+                      <div>
+                        <dt>Validation</dt>
+                        <dd>{snapshot.preflightStatus}</dd>
+                      </div>
+                      <div>
+                        <dt>Portal state</dt>
+                        <dd>{snapshot.portalState}</dd>
+                      </div>
+                    </dl>
+                    <h3 className="pf-modal-subhead">Applicant</h3>
+                    <dl className="pf-review-list">
+                      {(
+                        Object.entries(snapshot.values) as [string, string][]
+                      ).map(([field, value]) => (
+                        <div key={field}>
+                          <dt>{humanizeField(field)}</dt>
+                          <dd>{value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <h3 className="pf-modal-subhead">State fingerprint</h3>
+                    <p className="pf-modal-fingerprint mono" translate="no">
+                      {snapshot.fingerprint}
+                    </p>
+                    <p className="pf-summary">
+                      Approval applies only to this exact verified state. Any relevant change invalidates
+                      approval.
+                    </p>
+                    <div className="pf-modal-actions">
+                      <button type="button" className="pf-btn-secondary" onClick={() => setOpen(false)}>
+                        Cancel
+                      </button>
+                      <button type="button" className="pf-btn" onClick={approve}>
+                        Approve submission
+                      </button>
+                    </div>
+                  </div>
+                </div>,
+                document.body,
+              )
+            : null}
         </>
       )}
     </section>
