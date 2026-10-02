@@ -19,21 +19,34 @@ const REFERENCE_DATE = "2026-09-30";
 
 export type ExecuteRequest = { caseId?: unknown; headed?: unknown; scenario?: unknown };
 
-// Headless resolution: the SERVER is the source of truth for production
-// safety. A client `headed: true` request must never launch headed Chromium
-// where no display exists. Production deployments declare that explicitly
-// via PREFLIGHT_FORCE_HEADLESS (set in both Dockerfiles); NODE_ENV is a
-// backstop. Local development (neither set) respects the requested setting,
-// so the visible-browser demo path keeps working. Display sniffing is
-// deliberately not used: behavior must be explicit, not environmental luck.
-export function resolveHeadless(requestedHeaded: boolean): boolean {
+// Headless resolution: the SERVER is the source of truth for browser safety.
+// Headed Chromium requires a display, so the safe behavior is the DEFAULT:
+// only a host that explicitly allows a visible browser may honor a client's
+// `headed: true`. Any deployment that forgets to configure anything therefore
+// runs headless instead of failing with "no XServer running".
+//
+//   1. PREFLIGHT_FORCE_HEADLESS=true  -> always headless (both images set it)
+//   2. NODE_ENV=production            -> always headless (backstop)
+//   3. host did not opt in            -> always headless (safe default)
+//   4. development host (allowHeaded) -> respect the requested setting
+//
+// Display sniffing is deliberately not used: behavior is explicit, not
+// environmental luck.
+export type HeadlessOptions = { allowHeaded?: boolean };
+
+export function resolveHeadless(requestedHeaded: boolean, options: HeadlessOptions = {}): boolean {
   if (process.env.PREFLIGHT_FORCE_HEADLESS === "true") return true;
   if (process.env.NODE_ENV === "production") return true;
+  if (options.allowHeaded !== true) return true;
   return !requestedHeaded;
 }
 
-export function isHeadlessEnforced(): boolean {
-  return process.env.PREFLIGHT_FORCE_HEADLESS === "true" || process.env.NODE_ENV === "production";
+export function isHeadlessEnforced(options: HeadlessOptions = {}): boolean {
+  return (
+    process.env.PREFLIGHT_FORCE_HEADLESS === "true" ||
+    process.env.NODE_ENV === "production" ||
+    options.allowHeaded !== true
+  );
 }
 
 export type ExecuteOutcome =
@@ -49,9 +62,13 @@ function manifestIds(): string[] {
   return manifest.cases.map((c) => c.id);
 }
 
-export async function executeCase(input: ExecuteRequest, portalBase: string): Promise<ExecuteOutcome> {
+export async function executeCase(
+  input: ExecuteRequest,
+  portalBase: string,
+  options: HeadlessOptions = {},
+): Promise<ExecuteOutcome> {
   const caseId = input.caseId as string | undefined;
-  const headlessEnforced = isHeadlessEnforced();
+  const headlessEnforced = isHeadlessEnforced(options);
   const showWindow = input.headed === true && !headlessEnforced;
   const scenario = typeof input.scenario === "string" && SCENARIO_PATTERN.test(input.scenario) ? input.scenario : "";
   if (!caseId || !CASE_ID_PATTERN.test(caseId) || !manifestIds().includes(caseId)) {

@@ -67,6 +67,9 @@ export function preflightExecuteBridge(): Plugin {
           const outcome = await executeCase(
             body as { caseId?: unknown; headed?: unknown; scenario?: unknown },
             `http://${host}`,
+            // Dev middleware only: this process is a developer's local machine,
+            // so the "Show the browser window" option may open real Chromium.
+            { allowHeaded: true },
           );
           res.statusCode = outcome.status;
           res.setHeader("Content-Type", "application/json");

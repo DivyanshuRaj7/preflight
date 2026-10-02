@@ -103,9 +103,12 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
     }
     running = true;
     try {
+      // Explicit: this runtime has no display, so a visible browser is never
+      // launched here regardless of what the client requests.
       const outcome = await executeCase(
         body as { caseId?: unknown; headed?: unknown; scenario?: unknown },
         `http://${req.headers.host ?? "localhost"}`,
+        { allowHeaded: false },
       );
       json(res, outcome.status, outcome.body);
     } catch (error) {
