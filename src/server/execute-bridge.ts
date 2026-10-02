@@ -60,8 +60,6 @@ export function preflightExecuteBridge(): Plugin {
     name: "preflight-execute-bridge",
     apply: "serve",
     configureServer(server) {
-      const port = server.config.server.port ?? 5173;
-      const base = `http://127.0.0.1:${port}`;
       server.middlewares.use("/api/execute", async (req: IncomingMessage, res: ServerResponse) => {
         if (req.method !== "POST") {
           send(res, 405, { ok: false, stage: "request", error: "Use POST with a JSON { caseId } body." });
@@ -101,6 +99,15 @@ export function preflightExecuteBridge(): Plugin {
             });
             return;
           }
+          // Portal URL comes from the request's own Host header, so the agent
+          // always drives the server the judge is actually viewing — never a
+          // default port that may not be listening.
+          const host = req.headers.host;
+          if (!host) {
+            send(res, 400, { ok: false, stage: "request", error: "Missing Host header." });
+            return;
+          }
+          const base = `http://${host}`;
           browser = await chromium.launch({ headless: !showWindow });
           const page = await browser.newPage();
           await page.goto(`${base}/portal/scholarship-renewal`);
