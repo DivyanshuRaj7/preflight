@@ -47,34 +47,41 @@ export function ApprovalPanel({ run }: { run: PreflightRun }) {
         <p className="pf-summary">{snapshotError ?? "Review unavailable."}</p>
       ) : (
         <>
-          <dl className="pf-review-list">
-            <div>
-              <dt>Application</dt>
-              <dd translate="no">{snapshot.applicationId}</dd>
-            </div>
-            <div>
-              <dt>Validation</dt>
-              <dd>{snapshot.preflightStatus}</dd>
-            </div>
-            <div>
-              <dt>Portal state</dt>
-              <dd>{snapshot.portalState}</dd>
-            </div>
-            {(
-              Object.entries(snapshot.values) as [string, string][]
-            ).map(([field, value]) => (
-              <div key={field}>
-                <dt translate="no">{field}</dt>
-                <dd>{value}</dd>
+          <p className="pf-review-state">
+            Verified state · <strong>{snapshot.preflightStatus}</strong>
+            <span aria-hidden="true"> · </span>Portal state · <strong>{snapshot.portalState}</strong>
+          </p>
+          <details className="pf-review-details">
+            <summary>Review before approval</summary>
+            <dl className="pf-review-list">
+              <div>
+                <dt>Application</dt>
+                <dd translate="no">{snapshot.applicationId}</dd>
               </div>
-            ))}
-            <div>
-              <dt>State fingerprint</dt>
-              <dd className="mono" translate="no">
-                {snapshot.fingerprint}
-              </dd>
-            </div>
-          </dl>
+              <div>
+                <dt>Validation</dt>
+                <dd>{snapshot.preflightStatus}</dd>
+              </div>
+              <div>
+                <dt>Portal state</dt>
+                <dd>{snapshot.portalState}</dd>
+              </div>
+              {(
+                Object.entries(snapshot.values) as [string, string][]
+              ).map(([field, value]) => (
+                <div key={field}>
+                  <dt translate="no">{field}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+              <div>
+                <dt>State fingerprint</dt>
+                <dd className="mono" translate="no">
+                  {snapshot.fingerprint}
+                </dd>
+              </div>
+            </dl>
+          </details>
           {approval === null ? (
             <button
               type="button"

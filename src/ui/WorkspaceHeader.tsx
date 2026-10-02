@@ -37,8 +37,6 @@ export function WorkspaceHeader({
         </p>
       ) : null}
       <div className="pf-demo">
-        <h2 className="pf-section-title">Synthetic Demo</h2>
-        <p className="pf-summary">Reproduce a known application scenario. Synthetic demo data — no personal data required.</p>
         <div className="pf-controls">
           <div className="pf-field pf-field-grow">
             <label htmlFor="case-select">Synthetic case</label>
@@ -64,17 +62,9 @@ export function WorkspaceHeader({
           <button type="button" className="pf-btn" onClick={onRun} disabled={running}>
             {running ? "Running…" : "Run Preflight"}
           </button>
-          <button
-            type="button"
-            className="pf-btn-secondary pf-btn-soon"
-            disabled
-            title="Direct document upload is not available in this build."
-          >
-            Upload documents · Coming soon
-          </button>
         </div>
-        <p className="pf-summary" translate="no">
-          Synthetic fixture · {documentCount} supporting documents
+        <p className="pf-context-line" translate="no">
+          Synthetic fixture · {documentCount} supporting documents · no personal data
         </p>
       </div>
     </header>

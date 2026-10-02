@@ -106,7 +106,9 @@ export function PipelinePanel({
               </p>
             </div>
           ) : null}
-          <EvidencePanel finding={finding} evidence={evidence} selectedId={selectedEvidenceId} />
+          {finding && finding.evidenceIds.length > 0 ? (
+            <EvidencePanel finding={finding} evidence={evidence} selectedId={selectedEvidenceId} />
+          ) : null}
           <div className="pf-pipeline-actions">
             <a className="pf-btn pf-btn-link" href="#findings">
               Review findings
