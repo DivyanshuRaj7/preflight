@@ -21,19 +21,16 @@ Switch to the corrected synthetic case and re-run Preflight. Show READY.
 The demo uses separate deterministic synthetic cases rather than live document editing.
 
 **1:15–1:55 — Browser execution**  
-Run the live browser agent (own terminal, project root):
-
-```bash
-npm run demo:browser
-```
-
-It validates CASE-001, inspects the real portal, maps 6 fields, fills them,
-independently reads every value back, saves the draft, and verifies SAVED —
-printing only what actually happened. Add `-- --headed` to watch the
-Chromium window, `--scenario=flaky-save` for the recovery path
-(RECOVERED after one bounded retry), `--scenario=unknown-save` for the
-escalation path (ESCALATED, no retry). For label drift, run the
-`label-drift` E2E spec instead; the portal keeps no execution UI of its own.
+On the READY console, click Run browser agent (below the decision). The
+console POSTs to the dev-only `/api/execute` bridge, which drives a real
+Chromium through the existing execution stack — inspect, map, fill 6 values,
+independently read them back, save the draft, verify SAVED — and the UI
+renders the returned trace plus the expected-vs-observed values. Tick Show
+the browser window to watch the Chromium session on the demo machine.
+Terminal alternative with the same real flow: `npm run demo:browser`
+(add `-- --headed`, `--scenario=flaky-save`, or `--scenario=unknown-save`
+for recovery/escalation). For label drift, run the `label-drift` E2E spec
+instead; the portal keeps no execution UI of its own.
 
 **1:55–2:20 — Failure**  
 Inject an unknown save/submit state. The agent checks the actual portal state instead of assuming failure or success. Because the state is inconclusive, it escalates rather than blindly retrying.

@@ -506,8 +506,8 @@ section { scroll-margin-top: 16px; }
   border-radius: var(--radius-md);
   box-shadow: 0 24px 64px rgba(22, 24, 29, 0.22);
 }
-.pf-modal-scroll { overflow-y: auto; padding: 24px 24px 0; min-height: 0; }
-.pf-modal-head { display: flex; align-items: flex-start; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--hairline); }
+.pf-modal-scroll { overflow-y: auto; padding: 20px 20px 0; min-height: 0; }
+.pf-modal-head { display: flex; align-items: flex-start; gap: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--hairline); }
 .pf-modal-head > div { min-width: 0; }
 .pf-modal-title { margin: 0; font-size: 19px; font-weight: 650; letter-spacing: -0.01em; }
 .pf-modal-case { margin: 4px 0 0; font-size: 12.5px; color: var(--ink-subtle); overflow-wrap: anywhere; }
@@ -529,24 +529,23 @@ section { scroll-margin-top: 16px; }
 }
 .pf-modal-close:hover { background: var(--surface-2); color: var(--ink); }
 .pf-modal-close svg { width: 12px; height: 12px; }
-.pf-modal-purpose { margin: 16px 0 0; font-size: 14.5px; color: var(--ink); font-weight: 500; }
-.pf-modal-status { list-style: none; margin: 12px 0 0; padding: 0; }
-.pf-modal-status > li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; }
-.pf-modal-status > li + li { border-top: 1px solid var(--hairline); }
+.pf-modal-purpose { margin: 10px 0 0; font-size: 14.5px; color: var(--ink); font-weight: 500; }
+.pf-modal-status { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 20px; }
+.pf-modal-status > li { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; }
 .pf-modal-check { color: var(--ready); font-weight: 700; font-size: 14px; line-height: 1.5; flex-shrink: 0; }
 .pf-modal-status strong { display: block; font-size: 13.5px; }
 .pf-modal-status span span { font-size: 13px; color: var(--ink-muted); }
 .pf-modal .pf-review-list { margin-top: 12px; }
-.pf-modal-subhead { font-size: 11.5px; font-weight: 600; letter-spacing: 0.08em; color: var(--ink-subtle); margin: 20px 0 0; padding-top: 16px; border-top: 1px solid var(--hairline); }
-.pf-applicant-grid { margin: 12px 0 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 24px; }
+.pf-modal-subhead { font-size: 11.5px; font-weight: 600; letter-spacing: 0.08em; color: var(--ink-subtle); margin: 14px 0 0; padding-top: 10px; border-top: 1px solid var(--hairline); }
+.pf-applicant-grid { margin: 8px 0 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 24px; }
 .pf-applicant-grid > div { min-width: 0; }
 .pf-applicant-grid > .pf-applicant-wide { grid-column: 1 / -1; }
 .pf-applicant-grid dt { font-size: 12px; color: var(--ink-subtle); margin-bottom: 2px; }
 .pf-applicant-grid dd { margin: 0; font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
-.pf-modal-fingerprint { font-size: 12.5px; margin: 8px 0 0; overflow-wrap: anywhere; }
+.pf-modal-fingerprint { font-size: 12.5px; margin: 6px 0 0; overflow-wrap: anywhere; }
 .pf-modal-warning { border-left: 3px solid var(--awaiting); padding-left: 12px; }
-.pf-modal .pf-summary { margin-top: 16px; }
-.pf-modal-actions { display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0; padding: 16px 24px 24px; border-top: 1px solid var(--hairline); }
+.pf-modal .pf-summary { margin-top: 10px; }
+.pf-modal-actions { display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0; padding: 12px 20px 20px; border-top: 1px solid var(--hairline); }
 @media (prefers-reduced-motion: no-preference) {
   .pf-modal-backdrop { animation: pf-backdrop-in 150ms ease-out; }
   .pf-modal { animation: pf-modal-in 180ms ease-out; }
@@ -555,10 +554,36 @@ section { scroll-margin-top: 16px; }
 }
 @media (max-width: 767px) {
   .pf-modal-backdrop { padding: 16px; }
-  .pf-modal-scroll { padding: 20px 20px 0; }
-  .pf-modal-actions { flex-direction: column-reverse; align-items: stretch; padding: 14px 20px 20px; }
+  .pf-modal-scroll { padding: 16px 16px 0; }
+  .pf-modal-status { grid-template-columns: minmax(0, 1fr); }
+  .pf-modal-actions { flex-direction: column-reverse; align-items: stretch; padding: 12px 16px 16px; }
   .pf-applicant-grid { grid-template-columns: minmax(0, 1fr); }
   .pf-modal-actions .pf-btn, .pf-modal-actions .pf-btn-secondary { width: 100%; }
+}
+
+/* ---------- Browser agent execution trace ---------- */
+
+.pf-agent { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--hairline); }
+.pf-agent-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+.pf-agent-check { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-muted); cursor: pointer; }
+.pf-agent-check input { width: 16px; height: 16px; accent-color: var(--ink); }
+.pf-trace-list { list-style: none; margin: 12px 0 0; padding: 0; }
+.pf-trace-list > li { display: flex; gap: 10px; align-items: baseline; padding: 6px 0; font-size: 13.5px; }
+.pf-trace-list > li + li { border-top: 1px solid var(--hairline); }
+.pf-trace-list > li.is-ok > span:first-child { color: var(--ready); font-weight: 700; }
+.pf-trace-list > li.is-bad > span:first-child { color: var(--blocked); font-weight: 700; }
+.pf-trace-subhead { font-size: 11.5px; font-weight: 600; letter-spacing: 0.08em; color: var(--ink-subtle); margin: 16px 0 0; }
+.pf-trace-values { margin: 8px 0 0; }
+.pf-trace-values > div { display: grid; grid-template-columns: minmax(140px, 220px) minmax(0, 1fr); gap: 4px 12px; padding: 5px 0; font-size: 13px; }
+.pf-trace-values > div + div { border-top: 1px solid var(--hairline); }
+.pf-trace-values dt { font-family: var(--font-mono); font-size: 12px; color: var(--ink-subtle); }
+.pf-trace-values dd { margin: 0; font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere; }
+.pf-trace-completion { margin: 12px 0; font-size: 14px; font-weight: 600; }
+.pf-trace-completion.is-ok { color: var(--ready); }
+.pf-trace-completion.is-bad { color: var(--blocked); }
+.pf-agent .pf-btn-secondary { margin-top: 4px; }
+@media (max-width: 767px) {
+  .pf-trace-values > div { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* ---------- Skeleton (loading state mirrors finding rows) ---------- */

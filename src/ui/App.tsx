@@ -4,6 +4,7 @@ import { runPreflightCase, type PreflightRun } from "./pipeline.js";
 import { PreflightMark, MoonIcon, SunIcon } from "./Logo.js";
 import { WorkspaceHeader } from "./WorkspaceHeader.js";
 import { PipelinePanel } from "./PipelinePanel.js";
+import { BrowserAgentPanel } from "./BrowserAgentPanel.js";
 import { ApprovalPanel } from "./ApprovalPanel.js";
 import { FindingList, type EvidenceSelection } from "./FindingList.js";
 import { EvidencePanel } from "./EvidencePanel.js";
@@ -114,6 +115,7 @@ export function App() {
             <div role="status" aria-live="polite" aria-label="Preflight result">
               <PipelinePanel run={run} finding={activeFinding} />
             </div>
+            {run.decision.status === "READY" ? <BrowserAgentPanel caseId={run.caseId} /> : null}
             <section id="findings" aria-label="Validation findings">
               <h2 className="pf-section-title">Findings</h2>
               <FindingList
