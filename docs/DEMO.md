@@ -17,13 +17,14 @@ Run `name-mismatch`. Show evidence-backed BLOCKED state.
 5. Switching cases clears the previous result before the next run.
 
 **0:55–1:15 — Revalidation**  
-Fix the synthetic conflict. Re-run validation. Show READY.
+Switch to the corrected synthetic case and re-run Preflight. Show READY.
+The demo uses separate deterministic synthetic cases rather than live document editing.
 
 **1:15–1:55 — Browser execution**  
 Run the local portal and show semantic label drift handling.
 
 **1:55–2:20 — Failure**  
-Inject submit timeout. Show UNKNOWN → state verification, not blind retry.
+Inject an unknown save/submit state. The agent checks the actual portal state instead of assuming failure or success. Because the state is inconclusive, it escalates rather than blindly retrying.
 
 **2:20–2:45 — Human approval**  
 Show exact application version, evidence, trace, and approval boundary.

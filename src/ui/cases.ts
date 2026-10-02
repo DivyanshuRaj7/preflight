@@ -44,3 +44,28 @@ function assertCaseInput(id: string, raw: unknown): CaseInput {
 export const CASES: CaseInput[] = (
   manifest as { cases: { id: string }[] }
 ).cases.map((entry) => assertCaseInput(entry.id, byId[entry.id]));
+
+// Curated Synthetic Demo list: the six judge-facing scenarios. Evaluation
+// and adversarial cases (007+) stay reachable for testing but out of the
+// default demo picker; CASE-011 never appears as a normal demo case.
+export const DEMO_CASE_IDS = [
+  "CASE-001-clean",
+  "CASE-002-name-mismatch",
+  "CASE-003-dob-mismatch",
+  "CASE-004-missing-income-certificate",
+  "CASE-005-expired-certificate",
+  "CASE-006-low-confidence-extraction",
+];
+
+const DEMO_DISPLAY_NAMES: Record<string, string> = {
+  "CASE-001-clean": "Clean application",
+  "CASE-002-name-mismatch": "Name mismatch",
+  "CASE-003-dob-mismatch": "DOB mismatch",
+  "CASE-004-missing-income-certificate": "Missing income certificate",
+  "CASE-005-expired-certificate": "Expired certificate",
+  "CASE-006-low-confidence-extraction": "Low-confidence extraction",
+};
+
+export function demoDisplayName(id: string): string {
+  return DEMO_DISPLAY_NAMES[id] ?? id;
+}

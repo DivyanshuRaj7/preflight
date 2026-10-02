@@ -34,10 +34,11 @@ describe("preflight UI", () => {
     expect(s.queryByText(/objectively true|guaranteed correct|guaranteed to be accepted/i)).not.toBeInTheDocument();
   });
 
-  it("labels CASE-011 as an adversarial known limitation, not a normal case", async () => {
-    const s = await runCase("CASE-011-consistent-false-evidence");
-    expect(s.getByText("ADVERSARIAL")).toBeInTheDocument();
-    expect(s.getByText(/Known limitation case/)).toBeInTheDocument();
+  it("does not offer CASE-011 in the demo picker", async () => {
+    const s = await runCase("CASE-001-clean");
+    await s.findByText("No blocking issues detected.");
+    const select = s.getByLabelText(/active application/i) as HTMLSelectElement;
+    expect([...select.options].map((o) => o.value)).not.toContain("CASE-011-consistent-false-evidence");
   });
 
   it("does not label clean cases adversarial", async () => {

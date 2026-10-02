@@ -29,6 +29,17 @@ npx playwright install chromium
 
 Then read `TASKS.md`. Do not ask the coding agent to build the entire product at once.
 
+## Judge / Demo Mode
+
+1. Open the deployed URL.
+2. Select a synthetic case (CASE-001 clean through CASE-006 low-confidence).
+3. Click Run Preflight.
+4. Inspect the evidence/result.
+5. For READY, open the synthetic scholarship application.
+6. No upload or personal data is required.
+
+Demo Mode uses bundled synthetic fixtures and the same Preflight validation pipeline used by the project evaluation. It performs no live LLM inference.
+
 ## Project rules
 
 - Synthetic/generated data only.

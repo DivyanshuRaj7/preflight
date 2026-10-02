@@ -73,6 +73,11 @@ export function PipelinePanel({ run }: { run: PreflightRun }) {
             {run.documents.length} documents · {criticalFields} critical fields · {blocking} blocking findings
           </p>
           <p className="pf-decision-note">Submission requires explicit human approval.</p>
+          <div className="pf-pipeline-actions">
+            <a className="pf-btn pf-btn-link" href="/portal/scholarship-renewal">
+              Open Application
+            </a>
+          </div>
         </div>
       ) : (
         <div className="pf-decision-body">
