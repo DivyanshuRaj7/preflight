@@ -160,6 +160,7 @@ describe("preflight UI", () => {
     fireEvent.click(scope.getByRole("button", { name: "Approve submission" }));
     expect(await scope.findByText("APPROVED")).toBeInTheDocument();
     expect(scope.getByText("Submission: not authorized —")).toBeInTheDocument();
+    expect(scope.getByText(/Approval covers this reviewed state/)).toBeInTheDocument();
     // The console authorizes nothing and submits nothing.
     expect(s.queryByRole("button", { name: /submit/i })).not.toBeInTheDocument();
   });

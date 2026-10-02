@@ -110,9 +110,15 @@ export function ApprovalPanel({ run }: { run: PreflightRun }) {
             Approval applies only to this exact verified state. Any relevant change invalidates approval.
           </p>
           {authorization && !authorization.authorized ? (
-            <p className="pf-summary">
-              Submission: not authorized — <span className="mono">{authorization.reason}</span>
-            </p>
+            <>
+              <p className="pf-summary">
+                Submission: not authorized — <span className="mono">{authorization.reason}</span>
+              </p>
+              <p className="pf-summary">
+                Approval covers this reviewed state. Submission is a separate gate that additionally
+                requires a verified browser execution, which this console does not perform.
+              </p>
+            </>
           ) : null}
         </>
       )}

@@ -1,5 +1,4 @@
-import type { Evidence, Finding } from "../domain/contracts.js";
-import { EvidencePanel } from "./EvidencePanel.js";
+import type { Finding } from "../domain/contracts.js";
 import type { PreflightRun } from "./pipeline.js";
 
 type StageState = "ready" | "blocked" | "attention";
@@ -22,21 +21,11 @@ function countEvidencedCriticalFields(run: PreflightRun): number {
   return [profile.name, profile.dateOfBirth, profile.address].filter((f) => f !== undefined).length;
 }
 
-// Decision surface: the verdict first, then the selected finding's headline
-// and fix, its evidence, the compact pipeline strip, coverage, and actions.
-// Every count, status, headline, and fix is computed from the run — never
-// staged animation or hard-coded demo content.
-export function PipelinePanel({
-  run,
-  finding,
-  evidence,
-  selectedEvidenceId,
-}: {
-  run: PreflightRun;
-  finding: Finding | null;
-  evidence: Evidence[];
-  selectedEvidenceId: string | null;
-}) {
+// Decision first: the verdict, the selected finding's headline and fix,
+// the compact pipeline strip, coverage, and actions. Every count, status,
+// headline, and fix is computed from the run — never staged animation or
+// hard-coded demo content. Cited evidence lives in the evidence section.
+export function PipelinePanel({ run, finding }: { run: PreflightRun; finding: Finding | null }) {
   const present = run.documents.filter((d) => d.status === "present").length;
   const missing = run.documents.length - present;
   const succeeded = run.results.filter((r) => r.status === "SUCCESS").length;
@@ -105,9 +94,6 @@ export function PipelinePanel({
                 <strong>Fix</strong> {finding.remediation}
               </p>
             </div>
-          ) : null}
-          {finding && finding.evidenceIds.length > 0 ? (
-            <EvidencePanel finding={finding} evidence={evidence} selectedId={selectedEvidenceId} />
           ) : null}
           <div className="pf-pipeline-actions">
             <a className="pf-btn pf-btn-link" href="#findings">

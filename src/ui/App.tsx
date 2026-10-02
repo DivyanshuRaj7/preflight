@@ -6,6 +6,7 @@ import { WorkspaceHeader } from "./WorkspaceHeader.js";
 import { PipelinePanel } from "./PipelinePanel.js";
 import { ApprovalPanel } from "./ApprovalPanel.js";
 import { FindingList, type EvidenceSelection } from "./FindingList.js";
+import { EvidencePanel } from "./EvidencePanel.js";
 import { DocumentList } from "./DocumentList.js";
 
 type Theme = "light" | "dark";
@@ -110,35 +111,25 @@ export function App() {
         ) : null}
         {run && !running ? (
           <>
-            <div className="pf-desk">
-              <div className="pf-desk-main">
-                <section id="findings" aria-label="Validation findings">
-                  <h2 className="pf-section-title">Findings</h2>
-                  <FindingList
-                    issues={run.decision.issues}
-                    evidenceById={evidenceById}
-                    selectedIndex={selectedFinding}
-                    selectedEvidenceId={selectedEvidence}
-                    onSelect={handleFindingSelect}
-                  />
-                </section>
-                <section id="documents" className="pf-docs" aria-label="Case documents">
-                  <h2 className="pf-section-title">Documents</h2>
-                  <DocumentList documents={run.documents} />
-                </section>
-              </div>
-              <div className="pf-desk-side">
-                <div role="status" aria-live="polite" aria-label="Preflight result">
-                  <PipelinePanel
-                    run={run}
-                    finding={activeFinding}
-                    evidence={run.evidence}
-                    selectedEvidenceId={selectedEvidence}
-                  />
-                </div>
-                {run.decision.status === "READY" ? <ApprovalPanel run={run} /> : null}
-              </div>
+            <div role="status" aria-live="polite" aria-label="Preflight result">
+              <PipelinePanel run={run} finding={activeFinding} />
             </div>
+            <section id="findings" aria-label="Validation findings">
+              <h2 className="pf-section-title">Findings</h2>
+              <FindingList
+                issues={run.decision.issues}
+                evidenceById={evidenceById}
+                selectedIndex={selectedFinding}
+                selectedEvidenceId={selectedEvidence}
+                onSelect={handleFindingSelect}
+              />
+            </section>
+            <EvidencePanel finding={activeFinding} evidence={run.evidence} selectedId={selectedEvidence} />
+            <section id="documents" className="pf-docs" aria-label="Case documents">
+              <h2 className="pf-section-title">Documents</h2>
+              <DocumentList documents={run.documents} />
+            </section>
+            {run.decision.status === "READY" ? <ApprovalPanel run={run} /> : null}
           </>
         ) : null}
         <footer className="pf-footer">
