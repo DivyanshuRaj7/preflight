@@ -29,9 +29,9 @@ describe("review modal", () => {
   it("C+D. opens a dialog with the exact verified state", async () => {
     const s = await runCase("CASE-001-clean");
     const dialog = await openReview(s);
+    expect(dialog.getByRole("heading", { name: "Review before approval" })).toBeInTheDocument();
     expect(dialog.getByText("CASE-001-clean")).toBeInTheDocument();
-    expect(dialog.getByText("Validation")).toBeInTheDocument();
-    expect(dialog.getByText("Portal state")).toBeInTheDocument();
+    expect(dialog.getByText("Review this verified state before approving submission.")).toBeInTheDocument();
     expect(dialog.getByText("Full name")).toBeInTheDocument();
     expect(dialog.getByText("Rina Das")).toBeInTheDocument();
     expect(dialog.getByText("State fingerprint")).toBeInTheDocument();

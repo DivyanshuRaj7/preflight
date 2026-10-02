@@ -14,7 +14,8 @@
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:headed": "playwright test --headed",
-    "demo:reset": "tsx scripts/demo-reset.ts"
+      "demo:reset": "tsx scripts/demo-reset.ts",
+      "demo:browser": "tsx scripts/demo-browser.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",

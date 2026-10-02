@@ -492,20 +492,22 @@ section { scroll-margin-top: 16px; }
 }
 :root[data-theme="dark"] .pf-modal-backdrop { background: rgba(0, 0, 0, 0.6); }
 .pf-modal {
+  display: flex;
+  flex-direction: column;
   width: min(600px, 100%);
-  max-height: calc(100vh - 96px);
-  overflow-y: auto;
+  max-height: min(700px, calc(100vh - 96px));
+  overflow: hidden;
   background: var(--surface-1);
   border: 1px solid var(--hairline-strong);
   border-radius: var(--radius-md);
   box-shadow: 0 24px 64px rgba(22, 24, 29, 0.22);
-  padding: 24px;
 }
+.pf-modal-scroll { overflow-y: auto; padding: 24px 24px 0; min-height: 0; }
 .pf-modal-head { display: flex; align-items: flex-start; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--hairline); }
 .pf-modal-head > div { min-width: 0; }
-.pf-modal-eyebrow { margin: 0 0 2px; font-size: 11.5px; font-weight: 600; letter-spacing: 0.08em; color: var(--ink-subtle); }
-.pf-modal-title { margin: 0; font-family: var(--font-mono); font-size: 16px; font-weight: 600; overflow-wrap: anywhere; }
-.pf-modal-states { margin: 4px 0 0; font-family: var(--font-mono); font-size: 12.5px; color: var(--ready); font-weight: 600; }
+.pf-modal-title { margin: 0; font-size: 19px; font-weight: 650; letter-spacing: -0.01em; }
+.pf-modal-case { margin: 4px 0 0; font-size: 12.5px; color: var(--ink-subtle); overflow-wrap: anywhere; }
+.pf-modal-states { margin: 4px 0 0; font-size: 12.5px; color: var(--ready); font-weight: 600; }
 .pf-modal-close {
   margin-left: auto;
   display: inline-flex;
@@ -523,11 +525,24 @@ section { scroll-margin-top: 16px; }
 }
 .pf-modal-close:hover { background: var(--surface-2); color: var(--ink); }
 .pf-modal-close svg { width: 12px; height: 12px; }
+.pf-modal-purpose { margin: 16px 0 0; font-size: 14.5px; color: var(--ink); font-weight: 500; }
+.pf-modal-status { list-style: none; margin: 12px 0 0; padding: 0; }
+.pf-modal-status > li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; }
+.pf-modal-status > li + li { border-top: 1px solid var(--hairline); }
+.pf-modal-check { color: var(--ready); font-weight: 700; font-size: 14px; line-height: 1.5; flex-shrink: 0; }
+.pf-modal-status strong { display: block; font-size: 13.5px; }
+.pf-modal-status span span { font-size: 13px; color: var(--ink-muted); }
 .pf-modal .pf-review-list { margin-top: 12px; }
 .pf-modal-subhead { font-size: 11.5px; font-weight: 600; letter-spacing: 0.08em; color: var(--ink-subtle); margin: 20px 0 0; padding-top: 16px; border-top: 1px solid var(--hairline); }
+.pf-applicant-grid { margin: 12px 0 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 24px; }
+.pf-applicant-grid > div { min-width: 0; }
+.pf-applicant-grid > .pf-applicant-wide { grid-column: 1 / -1; }
+.pf-applicant-grid dt { font-size: 12px; color: var(--ink-subtle); margin-bottom: 2px; }
+.pf-applicant-grid dd { margin: 0; font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
 .pf-modal-fingerprint { font-size: 12.5px; margin: 8px 0 0; overflow-wrap: anywhere; }
+.pf-modal-warning { border-left: 3px solid var(--awaiting); padding-left: 12px; }
 .pf-modal .pf-summary { margin-top: 16px; }
-.pf-modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--hairline); }
+.pf-modal-actions { display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0; padding: 16px 24px 24px; border-top: 1px solid var(--hairline); }
 @media (prefers-reduced-motion: no-preference) {
   .pf-modal-backdrop { animation: pf-backdrop-in 150ms ease-out; }
   .pf-modal { animation: pf-modal-in 180ms ease-out; }
@@ -536,8 +551,9 @@ section { scroll-margin-top: 16px; }
 }
 @media (max-width: 767px) {
   .pf-modal-backdrop { padding: 16px; }
-  .pf-modal { padding: 20px; }
-  .pf-modal-actions { flex-direction: column-reverse; align-items: stretch; }
+  .pf-modal-scroll { padding: 20px 20px 0; }
+  .pf-modal-actions { flex-direction: column-reverse; align-items: stretch; padding: 14px 20px 20px; }
+  .pf-applicant-grid { grid-template-columns: minmax(0, 1fr); }
   .pf-modal-actions .pf-btn, .pf-modal-actions .pf-btn-secondary { width: 100%; }
 }
 

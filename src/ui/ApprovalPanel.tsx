@@ -171,49 +171,68 @@ export function ApprovalPanel({ run }: { run: PreflightRun }) {
                     aria-labelledby="pf-review-title"
                     tabIndex={-1}
                   >
-                    <div className="pf-modal-head">
-                      <div>
-                        <p className="pf-modal-eyebrow">Verified application</p>
-                        <h2 id="pf-review-title" className="pf-modal-title" translate="no">
-                          {snapshot.applicationId}
-                        </h2>
-                        <p className="pf-modal-states" translate="no">
-                          {snapshot.preflightStatus} · {snapshot.portalState}
-                        </p>
-                      </div>
-                      <button type="button" className="pf-modal-close" aria-label="Close review dialog" onClick={() => setOpen(false)}>
-                        <CloseIcon />
-                      </button>
-                    </div>
-                    <dl className="pf-review-list">
-                      <div>
-                        <dt>Validation</dt>
-                        <dd>{snapshot.preflightStatus}</dd>
-                      </div>
-                      <div>
-                        <dt>Portal state</dt>
-                        <dd>{snapshot.portalState}</dd>
-                      </div>
-                    </dl>
-                    <h3 className="pf-modal-subhead">Applicant</h3>
-                    <dl className="pf-review-list">
-                      {(
-                        Object.entries(snapshot.values) as [string, string][]
-                      ).map(([field, value]) => (
-                        <div key={field}>
-                          <dt>{humanizeField(field)}</dt>
-                          <dd>{value}</dd>
+                    <div className="pf-modal-scroll">
+                      <div className="pf-modal-head">
+                        <div>
+                          <h2 id="pf-review-title" className="pf-modal-title">
+                            Review before approval
+                          </h2>
+                          <p className="pf-modal-case mono" translate="no">
+                            {snapshot.applicationId}
+                          </p>
+                          <p className="pf-modal-states" translate="no">
+                            {snapshot.preflightStatus} · {snapshot.portalState}
+                          </p>
                         </div>
-                      ))}
-                    </dl>
-                    <h3 className="pf-modal-subhead">State fingerprint</h3>
-                    <p className="pf-modal-fingerprint mono" translate="no">
-                      {snapshot.fingerprint}
-                    </p>
-                    <p className="pf-summary">
-                      Approval applies only to this exact verified state. Any relevant change invalidates
-                      approval.
-                    </p>
+                        <button type="button" className="pf-modal-close" aria-label="Close review dialog" onClick={() => setOpen(false)}>
+                          <CloseIcon />
+                        </button>
+                      </div>
+                      <p className="pf-modal-purpose">Review this verified state before approving submission.</p>
+                      <ul className="pf-modal-status" aria-label="Review status">
+                        <li>
+                          <span className="pf-modal-check" aria-hidden="true">
+                            ✓
+                          </span>
+                          <div>
+                            <strong translate="no">{snapshot.preflightStatus}</strong>
+                            <span>
+                              {run.decision.issues.length === 0
+                                ? "No blocking issues detected."
+                                : `${run.decision.issues.length} finding(s) on record — see Findings on the main page.`}
+                            </span>
+                          </div>
+                        </li>
+                        <li>
+                          <span className="pf-modal-check" aria-hidden="true">
+                            ✓
+                          </span>
+                          <div>
+                            <strong translate="no">{snapshot.portalState}</strong>
+                            <span>Portal state recorded in this review snapshot.</span>
+                          </div>
+                        </li>
+                      </ul>
+                      <h3 className="pf-modal-subhead">Applicant</h3>
+                      <dl className="pf-applicant-grid">
+                        {(
+                          Object.entries(snapshot.values) as [string, string][]
+                        ).map(([field, value]) => (
+                          <div key={field} className={field === "address" ? "pf-applicant-wide" : undefined}>
+                            <dt>{humanizeField(field)}</dt>
+                            <dd>{value}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                      <h3 className="pf-modal-subhead">State fingerprint</h3>
+                      <p className="pf-modal-fingerprint mono" translate="no">
+                        {snapshot.fingerprint}
+                      </p>
+                      <p className="pf-summary pf-modal-warning">
+                        Approval applies only to this exact verified state. Any relevant change invalidates
+                        approval.
+                      </p>
+                    </div>
                     <div className="pf-modal-actions">
                       <button type="button" className="pf-btn-secondary" onClick={() => setOpen(false)}>
                         Cancel
