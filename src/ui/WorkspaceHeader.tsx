@@ -56,14 +56,14 @@ export function WorkspaceHeader({
               </optgroup>
             ) : null}
           </select>
-          <p className="pf-summary" translate="no">
-            Synthetic fixture · {documentCount} supporting documents
-          </p>
         </div>
         <button type="button" className="pf-btn" onClick={onRun} disabled={running}>
           {running ? "Running…" : "Run Preflight"}
         </button>
       </div>
+      <p className="pf-summary" translate="no">
+        Synthetic fixture · {documentCount} supporting documents
+      </p>
     </header>
   );
 }

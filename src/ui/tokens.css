@@ -317,6 +317,7 @@ section { scroll-margin-top: 16px; }
 /* ---------- Findings ---------- */
 
 .pf-summary { margin: 0 0 8px; color: var(--ink-muted); font-size: 13.5px; }
+.pf-controls + .pf-summary { margin-top: 8px; }
 .pf-summary strong { color: var(--ink); font-variant-numeric: tabular-nums; }
 .pf-finding-list { list-style: none; margin: 0; padding: 0; }
 .pf-finding {
