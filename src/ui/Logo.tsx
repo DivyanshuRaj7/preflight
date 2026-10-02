@@ -6,7 +6,7 @@ export function PreflightMark() {
     <svg viewBox="0 0 28 28" aria-hidden="true" className="pf-mark">
       <rect x="1.5" y="1.5" width="25" height="25" rx="7" fill="var(--ink)" />
       <path
-        d="M8 14.5l4.8 4.8L21 9.5"
+        d="M7 14.5l5 5L27 7"
         fill="none"
         stroke="var(--canvas)"
         strokeWidth="3"

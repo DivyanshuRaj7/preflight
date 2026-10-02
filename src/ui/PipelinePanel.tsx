@@ -1,3 +1,5 @@
+import type { Evidence, Finding } from "../domain/contracts.js";
+import { EvidencePanel } from "./EvidencePanel.js";
 import type { PreflightRun } from "./pipeline.js";
 
 type StageState = "ready" | "blocked" | "attention";
@@ -20,10 +22,21 @@ function countEvidencedCriticalFields(run: PreflightRun): number {
   return [profile.name, profile.dateOfBirth, profile.address].filter((f) => f !== undefined).length;
 }
 
-// Verification pipeline: one segmented status row, a labeled document-
-// coverage bar, and the decision. Every count and status is computed from
-// the run — never staged animation or hard-coded demo content.
-export function PipelinePanel({ run }: { run: PreflightRun }) {
+// Decision surface: the verdict first, then the selected finding's headline
+// and fix, its evidence, the compact pipeline strip, coverage, and actions.
+// Every count, status, headline, and fix is computed from the run — never
+// staged animation or hard-coded demo content.
+export function PipelinePanel({
+  run,
+  finding,
+  evidence,
+  selectedEvidenceId,
+}: {
+  run: PreflightRun;
+  finding: Finding | null;
+  evidence: Evidence[];
+  selectedEvidenceId: string | null;
+}) {
   const present = run.documents.filter((d) => d.status === "present").length;
   const missing = run.documents.length - present;
   const succeeded = run.results.filter((r) => r.status === "SUCCESS").length;
@@ -85,6 +98,15 @@ export function PipelinePanel({ run }: { run: PreflightRun }) {
             This application cannot proceed until {blocking} issue{blocking === 1 ? "" : "s"}{" "}
             {blocking === 1 ? "is" : "are"} resolved.
           </p>
+          {finding ? (
+            <div className="pf-decision-finding">
+              <p className="pf-decision-headline">{finding.message}</p>
+              <p className="pf-decision-fix">
+                <strong>Fix</strong> {finding.remediation}
+              </p>
+            </div>
+          ) : null}
+          <EvidencePanel finding={finding} evidence={evidence} selectedId={selectedEvidenceId} />
           <div className="pf-pipeline-actions">
             <a className="pf-btn pf-btn-link" href="#findings">
               Review findings

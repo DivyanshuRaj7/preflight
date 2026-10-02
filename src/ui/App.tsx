@@ -6,7 +6,6 @@ import { WorkspaceHeader } from "./WorkspaceHeader.js";
 import { PipelinePanel } from "./PipelinePanel.js";
 import { ApprovalPanel } from "./ApprovalPanel.js";
 import { FindingList, type EvidenceSelection } from "./FindingList.js";
-import { EvidencePanel } from "./EvidencePanel.js";
 import { DocumentList } from "./DocumentList.js";
 
 type Theme = "light" | "dark";
@@ -100,9 +99,9 @@ export function App() {
         {!run && !running ? (
           <div className="pf-empty">
             <h2>Nothing validated yet</h2>
-            <p>Verify an application before it is submitted. Choose an application above and run the check.</p>
+            <p>Verify an application before it is submitted. Choose a synthetic case above and run the check.</p>
             <ol>
-              <li>Choose the active application.</li>
+              <li>Choose a synthetic case.</li>
               <li>Run Preflight.</li>
               <li>Read the findings, evidence, and remediation.</li>
             </ol>
@@ -111,11 +110,8 @@ export function App() {
         ) : null}
         {run && !running ? (
           <>
-            <div role="status" aria-live="polite" aria-label="Preflight result">
-              <PipelinePanel run={run} />
-            </div>
-            <div className="pf-columns">
-              <div>
+            <div className="pf-desk">
+              <div className="pf-desk-main">
                 <section id="findings" aria-label="Validation findings">
                   <h2 className="pf-section-title">Findings</h2>
                   <FindingList
@@ -130,14 +126,26 @@ export function App() {
                   <h2 className="pf-section-title">Documents</h2>
                   <DocumentList documents={run.documents} />
                 </section>
-                {run.decision.status === "READY" ? <ApprovalPanel run={run} /> : null}
               </div>
-              <div className="pf-evidence-pane">
-                <EvidencePanel finding={activeFinding} evidence={run.evidence} selectedId={selectedEvidence} />
+              <div className="pf-desk-side">
+                <div role="status" aria-live="polite" aria-label="Preflight result">
+                  <PipelinePanel
+                    run={run}
+                    finding={activeFinding}
+                    evidence={run.evidence}
+                    selectedEvidenceId={selectedEvidence}
+                  />
+                </div>
+                {run.decision.status === "READY" ? <ApprovalPanel run={run} /> : null}
               </div>
             </div>
           </>
         ) : null}
+        <footer className="pf-footer">
+          <p>
+            AI for ambiguity. Code for correctness. · Synthetic data only — this interface never submits anything.
+          </p>
+        </footer>
 </main>
     </>
   );

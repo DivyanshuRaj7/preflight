@@ -10,7 +10,7 @@ import manifest from "../../fixtures/manifest.json" with { type: "json" };
 
 async function runCase(caseId: string) {
   render(<App />);
-  fireEvent.change(screen.getByLabelText(/active application/i), { target: { value: caseId } });
+  fireEvent.change(screen.getByLabelText(/synthetic case/i), { target: { value: caseId } });
   fireEvent.click(screen.getByRole("button", { name: /run preflight/i }));
   return screen;
 }
@@ -37,7 +37,7 @@ describe("preflight UI", () => {
   it("does not offer CASE-011 in the demo picker", async () => {
     const s = await runCase("CASE-001-clean");
     await s.findByText("No blocking issues detected.");
-    const select = s.getByLabelText(/active application/i) as HTMLSelectElement;
+    const select = s.getByLabelText(/synthetic case/i) as HTMLSelectElement;
     expect([...select.options].map((o) => o.value)).not.toContain("CASE-011-consistent-false-evidence");
   });
 
@@ -92,7 +92,16 @@ describe("preflight UI", () => {
   it("shows evidence references and remediation", async () => {
     const s = await runCase("CASE-002-name-mismatch");
     expect(await s.findByText(/ev-doc-bank-proof-name → doc-bank-proof/)).toBeInTheDocument();
-    expect(s.getByText(/Ensure the applicant name matches/)).toBeInTheDocument();
+    // The fix surfaces in the decision panel and verbatim in the finding.
+    expect(s.getAllByText(/Ensure the applicant name matches/).length).toBeGreaterThanOrEqual(2);
+    expect((await findingsSection(s)).getByText(/Ensure the applicant name matches/)).toBeInTheDocument();
+  });
+
+  it("surfaces the selected finding headline and fix in the decision panel", async () => {
+    const s = await runCase("CASE-004-missing-income-certificate");
+    const panel = within(await s.findByLabelText("Verification pipeline"));
+    expect(panel.getByText("Required document missing: income-certificate.")).toBeInTheDocument();
+    expect(panel.getByText(/Provide the income-certificate document and re-run/)).toBeInTheDocument();
   });
 
   it("shows pipeline stages with counts from the real run", async () => {
@@ -120,7 +129,7 @@ describe("preflight UI", () => {
   it("clears stale results when switching cases", async () => {
     const s = await runCase("CASE-002-name-mismatch");
     expect((await findingsSection(s)).getByText("NAME_MISMATCH")).toBeInTheDocument();
-    fireEvent.change(s.getByLabelText(/active application/i), { target: { value: "CASE-001-clean" } });
+    fireEvent.change(s.getByLabelText(/synthetic case/i), { target: { value: "CASE-001-clean" } });
     expect(s.queryByText("NAME_MISMATCH")).not.toBeInTheDocument();
     expect(s.queryByRole("article")).not.toBeInTheDocument();
     expect(s.getByText("Nothing validated yet")).toBeInTheDocument();

@@ -39,7 +39,7 @@ describe("demo mode", () => {
 
   it("D. renders only engine-produced findings", async () => {
     render(<App />);
-    fireEvent.change(screen.getByLabelText(/active application/i), { target: { value: "CASE-002-name-mismatch" } });
+    fireEvent.change(screen.getByLabelText(/synthetic case/i), { target: { value: "CASE-002-name-mismatch" } });
     fireEvent.click(screen.getByRole("button", { name: /run preflight/i }));
     const section = within(await screen.findByLabelText("Validation findings"));
     const input = CASES.find((c) => c.id === "CASE-002-name-mismatch");
@@ -76,7 +76,7 @@ describe("demo mode", () => {
 
   it("H. hides CASE-011 from the normal demo picker", () => {
     render(<App />);
-    const select = screen.getByLabelText(/active application/i) as HTMLSelectElement;
+    const select = screen.getByLabelText(/synthetic case/i) as HTMLSelectElement;
     const values = [...select.options].map((o) => o.value);
     expect(values).not.toContain("CASE-011-consistent-false-evidence");
     for (const id of DEMO_CASE_IDS) expect(values).toContain(id);

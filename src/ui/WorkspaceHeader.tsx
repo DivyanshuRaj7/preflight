@@ -1,8 +1,8 @@
 import { CASES, DEMO_CASE_IDS, demoDisplayName } from "./cases.js";
 
-// Application context header: what is being verified, the active
-// application control, and the single Run action. Stage progress lives in
-// the pipeline panel once a run exists — it is not duplicated here.
+// Compact application context: what is being verified, the synthetic-case
+// evaluation control, and the single Run action. The decision surface lives
+// in the pipeline panel — this header only selects the scenario.
 export function WorkspaceHeader({
   selectedId,
   running,
@@ -21,10 +21,13 @@ export function WorkspaceHeader({
   return (
     <header className="pf-workspace">
       <p className="pf-eyebrow">Verify before you submit</p>
-      <h1 className="pf-title">Scholarship Renewal</h1>
-      <p className="pf-case-id" translate="no">
-        {selected.id} · {selected.scenario.split("-").join(" ").toUpperCase()}
-      </p>
+      <div className="pf-context-row">
+        <h1 className="pf-title">Scholarship Renewal</h1>
+        <p className="pf-case-id" translate="no">
+          {selected.id} · {selected.scenario.split("-").join(" ").toUpperCase()}
+        </p>
+      </div>
+      <p className="pf-lede">Verify documents, cross-check application data, and catch blocking issues before submission.</p>
       {selected.adversarial === true ? (
         <p className="pf-adversarial-flag">
           <span className="pf-badge pf-badge-awaiting" translate="no">
@@ -33,37 +36,47 @@ export function WorkspaceHeader({
           Known limitation case — its result tests the system boundary, not a normal application.
         </p>
       ) : null}
-      <h2 className="pf-section-title">Synthetic Demo</h2>
-      <p className="pf-summary">Reproduce a known application scenario. Synthetic demo data — no personal data required.</p>
-      <div className="pf-controls">
-        <div className="pf-field pf-field-grow">
-          <label htmlFor="case-select">Active application</label>
-          <select id="case-select" value={selectedId} onChange={(event) => onSelect(event.target.value)}>
-            <optgroup label="Synthetic demo cases">
-              {demoCases.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.id} · {demoDisplayName(c.id)}
-                </option>
-              ))}
-            </optgroup>
-            {extraCases.length > 0 ? (
-              <optgroup label="Additional evaluation cases">
-                {extraCases.map((c) => (
+      <div className="pf-demo">
+        <h2 className="pf-section-title">Synthetic Demo</h2>
+        <p className="pf-summary">Reproduce a known application scenario. Synthetic demo data — no personal data required.</p>
+        <div className="pf-controls">
+          <div className="pf-field pf-field-grow">
+            <label htmlFor="case-select">Synthetic case</label>
+            <select id="case-select" value={selectedId} onChange={(event) => onSelect(event.target.value)}>
+              <optgroup label="Synthetic demo cases">
+                {demoCases.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c.id} · {c.scenario.split("-").join(" ")}
+                    {c.id} · {demoDisplayName(c.id)}
                   </option>
                 ))}
               </optgroup>
-            ) : null}
-          </select>
+              {extraCases.length > 0 ? (
+                <optgroup label="Additional evaluation cases">
+                  {extraCases.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.id} · {c.scenario.split("-").join(" ")}
+                    </option>
+                  ))}
+                </optgroup>
+              ) : null}
+            </select>
+          </div>
+          <button type="button" className="pf-btn" onClick={onRun} disabled={running}>
+            {running ? "Running…" : "Run Preflight"}
+          </button>
+          <button
+            type="button"
+            className="pf-btn-secondary pf-btn-soon"
+            disabled
+            title="Direct document upload is not available in this build."
+          >
+            Upload documents · Coming soon
+          </button>
         </div>
-        <button type="button" className="pf-btn" onClick={onRun} disabled={running}>
-          {running ? "Running…" : "Run Preflight"}
-        </button>
+        <p className="pf-summary" translate="no">
+          Synthetic fixture · {documentCount} supporting documents
+        </p>
       </div>
-      <p className="pf-summary" translate="no">
-        Synthetic fixture · {documentCount} supporting documents
-      </p>
     </header>
   );
 }
