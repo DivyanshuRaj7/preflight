@@ -50,7 +50,20 @@ export function isHeadlessEnforced(options: HeadlessOptions = {}): boolean {
 }
 
 export type ExecuteOutcome =
-  | { status: number; body: { ok: true; caseId: string; inspected: number; mapped: number; headlessEnforced: boolean; result: unknown } }
+  | {
+      status: number;
+      body: {
+        ok: true;
+        caseId: string;
+        inspected: number;
+        mapped: number;
+        headlessEnforced: boolean;
+        // PNG (base64) captured by the agent's own browser AFTER execution:
+        // real visual evidence of the filled, verified portal state.
+        portalScreenshot?: string;
+        result: unknown;
+      };
+    }
   | { status: number; body: { ok: false; stage: string; error: string } };
 
 // Read server-side (never bundled): import attributes behave differently
@@ -113,7 +126,18 @@ export async function executeCase(
     }
     const tracer = createTracer();
     const result = await runExecutionPlan(page, planned.plan, { tracer });
-    return { status: 200, body: { ok: true, caseId, inspected: portalFields.length, mapped: matched, headlessEnforced, result } };
+    // Visual evidence: what the agent's browser actually left behind. Best
+    // effort only — a capture failure must never change the run's outcome.
+    let portalScreenshot: string | undefined;
+    try {
+      portalScreenshot = `data:image/png;base64,${(await page.screenshot({ fullPage: true })).toString("base64")}`;
+    } catch {
+      portalScreenshot = undefined;
+    }
+    return {
+      status: 200,
+      body: { ok: true, caseId, inspected: portalFields.length, mapped: matched, headlessEnforced, portalScreenshot, result },
+    };
   } finally {
     await browser?.close().catch(() => undefined);
   }

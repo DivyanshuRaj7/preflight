@@ -10,6 +10,7 @@ export type ExecuteBridgePayload = {
   inspected: number;
   mapped: number;
   headlessEnforced?: boolean;
+  portalScreenshot?: string;
   result: ExecutionResult;
 };
 

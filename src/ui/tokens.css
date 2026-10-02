@@ -579,6 +579,16 @@ section { scroll-margin-top: 16px; }
 .pf-trace-values dt { font-family: var(--font-mono); font-size: 12px; color: var(--ink-subtle); }
 .pf-trace-values dd { margin: 0; font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere; }
 .pf-trace-completion { margin: 12px 0; font-size: 14px; font-weight: 600; }
+.pf-trace-shot { margin: 14px 0 0; }
+.pf-trace-shot img {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-1);
+}
+.pf-trace-shot figcaption { margin-top: 6px; font-size: 12.5px; color: var(--ink-subtle); max-width: 60ch; }
 .pf-trace-completion.is-ok { color: var(--ready); }
 .pf-trace-completion.is-bad { color: var(--blocked); }
 .pf-agent .pf-btn-secondary { margin-top: 4px; }

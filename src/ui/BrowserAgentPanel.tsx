@@ -84,7 +84,7 @@ export function BrowserAgentPanel({ caseId }: { caseId: string }) {
             ) : null}
           </div>
           <p className="pf-summary pf-agent-note">
-            Runs a real Chromium on the server. To watch it locally, run the console with `npm run dev`.
+            Runs a real Chromium on the server and reports what it independently verified.
           </p>
         </>
       ) : null}
@@ -134,6 +134,18 @@ export function BrowserAgentPanel({ caseId }: { caseId: string }) {
           <p className={`pf-trace-completion ${trace.completion.ok ? "is-ok" : "is-bad"}`}>
             {trace.completion.text}
           </p>
+          {payload.portalScreenshot ? (
+            <figure className="pf-trace-shot">
+              <img
+                src={payload.portalScreenshot}
+                alt={`Synthetic scholarship portal as left by the browser agent: ${payload.mapped} fields filled and the portal state verified as ${payload.result.portalState ?? "unknown"}.`}
+              />
+              <figcaption>
+                Portal after execution — captured by the agent&apos;s browser, showing{" "}
+                {payload.mapped} filled fields and portal state {payload.result.portalState ?? "unknown"}.
+              </figcaption>
+            </figure>
+          ) : null}
           <button type="button" className="pf-btn-secondary" onClick={handleRun}>
             Run again
           </button>
