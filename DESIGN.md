@@ -34,15 +34,16 @@ Evidence → Finding → Impact → Remediation → Decision → Action
 
 ## 2. Theme
 
-- **Default: light** (warm near-white `#faf9f7`). Evidence documents read
-  best on light surfaces, and a light-first tool avoids the generic
-  dark-AI-dashboard cliché.
+- **Default: dark** (neutral near-black `#0a0a0b`) — the primary presentation
+  for the console, where READY/BLOCKED status colors read most clearly. Light
+  remains fully supported (`#faf9f7` canvas) for evidence-heavy reading.
 - **Dark mode is first-class**, not an afterthought: same semantic tokens on
   a neutral near-black canvas (`#0a0a0b`), verified contrast both ways.
 - **Manual toggle** in the masthead (sun/moon geometric icons) overrides the
-  OS preference via `data-theme`. Fresh loads default to light regardless of
-  OS setting; dark is chosen explicitly, never assumed.
-- One theme per screen. Never invert sections mid-page.
+  OS preference via `data-theme`. The choice is persisted and restored on
+  every visit; first-time visitors get dark. A pre-paint boot script applies
+  the stored theme before first render, so there is no flash of the wrong
+  theme. One theme per screen; never invert sections mid-page.
 
 ## 3. Color System
 

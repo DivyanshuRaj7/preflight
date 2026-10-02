@@ -4,6 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preflight — Verify before you submit</title>
+    <script>
+      (function () {
+        var theme = "dark";
+        try {
+          var stored = window.localStorage.getItem("preflight-theme");
+          if (stored === "light" || stored === "dark") theme = stored;
+        } catch (error) {
+          theme = "dark";
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

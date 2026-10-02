@@ -12,9 +12,26 @@ import { DocumentList } from "./DocumentList.js";
 
 type Theme = "light" | "dark";
 
+const THEME_STORAGE_KEY = "preflight-theme";
+
+function isTheme(value: unknown): value is Theme {
+  return value === "light" || value === "dark";
+}
+
 function initialTheme(): Theme {
-  // Fresh loads default to light; the toggle (and only the toggle) enables dark.
-  return "light";
+  // Dark is the default presentation; an explicit choice by the user always
+  // wins. The boot script in index.html applies the stored theme before first
+  // paint, so reading it back keeps React in sync with what is already shown.
+  if (typeof document === "undefined") return "dark";
+  const applied = document.documentElement.dataset.theme;
+  if (isTheme(applied)) return applied;
+  try {
+    const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+    if (isTheme(stored)) return stored;
+  } catch {
+    // Storage unavailable (private mode, disabled): fall through to the default.
+  }
+  return "dark";
 }
 
 // Preflight workspace: masthead, application context, decision, findings,
@@ -30,6 +47,11 @@ export function App() {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // Preference simply is not persisted when storage is unavailable.
+    }
   }, [theme]);
 
   function selectCase(id: string) {
