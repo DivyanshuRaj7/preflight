@@ -16,6 +16,9 @@ COPY . .
 RUN npm run build && npm run build:server
 
 ENV HOST=0.0.0.0
+# Headless Linux container with no XServer: force headless Chromium
+# regardless of what a client requests.
+ENV PREFLIGHT_FORCE_HEADLESS=true
 EXPOSE 4173
 
 # Existing production server: static dist + portal + /api/health + /api/execute.

@@ -247,6 +247,11 @@ Notes and limits:
 - The image is ~2.8 GB uncompressed (Chromium), so the Vercel project must
   use **Large Functions** (public beta, up to 5 GB uncompressed; new projects
   are auto-enrolled, older ones set `VERCEL_SUPPORT_LARGE_FUNCTIONS=1`).
+- Browser mode is environment-aware, not display-sniffed: both images set
+  `PREFLIGHT_FORCE_HEADLESS=true`, so the server always launches headless
+  Chromium in production even if a client requests a visible window. Local
+  development leaves it unset, so the "Show the browser window" option still
+  opens a real headed Chromium.
 - No secrets or env vars are required for Demo Mode. Do not add any.
 - A `Dockerfile` for Railway-style Docker hosts is also present and uses the
   identical stack and start command (`npm start`).

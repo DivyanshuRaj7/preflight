@@ -19,8 +19,25 @@ const REFERENCE_DATE = "2026-09-30";
 
 export type ExecuteRequest = { caseId?: unknown; headed?: unknown; scenario?: unknown };
 
+// Headless resolution: the SERVER is the source of truth for production
+// safety. A client `headed: true` request must never launch headed Chromium
+// where no display exists. Production deployments declare that explicitly
+// via PREFLIGHT_FORCE_HEADLESS (set in both Dockerfiles); NODE_ENV is a
+// backstop. Local development (neither set) respects the requested setting,
+// so the visible-browser demo path keeps working. Display sniffing is
+// deliberately not used: behavior must be explicit, not environmental luck.
+export function resolveHeadless(requestedHeaded: boolean): boolean {
+  if (process.env.PREFLIGHT_FORCE_HEADLESS === "true") return true;
+  if (process.env.NODE_ENV === "production") return true;
+  return !requestedHeaded;
+}
+
+export function isHeadlessEnforced(): boolean {
+  return process.env.PREFLIGHT_FORCE_HEADLESS === "true" || process.env.NODE_ENV === "production";
+}
+
 export type ExecuteOutcome =
-  | { status: number; body: { ok: true; caseId: string; inspected: number; mapped: number; result: unknown } }
+  | { status: number; body: { ok: true; caseId: string; inspected: number; mapped: number; headlessEnforced: boolean; result: unknown } }
   | { status: number; body: { ok: false; stage: string; error: string } };
 
 // Read server-side (never bundled): import attributes behave differently
@@ -34,7 +51,8 @@ function manifestIds(): string[] {
 
 export async function executeCase(input: ExecuteRequest, portalBase: string): Promise<ExecuteOutcome> {
   const caseId = input.caseId as string | undefined;
-  const showWindow = input.headed === true;
+  const headlessEnforced = isHeadlessEnforced();
+  const showWindow = input.headed === true && !headlessEnforced;
   const scenario = typeof input.scenario === "string" && SCENARIO_PATTERN.test(input.scenario) ? input.scenario : "";
   if (!caseId || !CASE_ID_PATTERN.test(caseId) || !manifestIds().includes(caseId)) {
     return { status: 422, body: { ok: false, stage: "case", error: `Unknown synthetic case: ${String(caseId)}.` } };
@@ -78,7 +96,7 @@ export async function executeCase(input: ExecuteRequest, portalBase: string): Pr
     }
     const tracer = createTracer();
     const result = await runExecutionPlan(page, planned.plan, { tracer });
-    return { status: 200, body: { ok: true, caseId, inspected: portalFields.length, mapped: matched, result } };
+    return { status: 200, body: { ok: true, caseId, inspected: portalFields.length, mapped: matched, headlessEnforced, result } };
   } finally {
     await browser?.close().catch(() => undefined);
   }

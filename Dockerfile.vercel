@@ -24,6 +24,9 @@ COPY . .
 RUN npm run build && npm run build:server
 
 ENV HOST=0.0.0.0
+# No XServer exists on Vercel: the execution service reads this and always
+# launches headless Chromium, regardless of what a client requests.
+ENV PREFLIGHT_FORCE_HEADLESS=true
 EXPOSE 80
 
 # Existing production server: static dist + portal + /api/health + /api/execute.

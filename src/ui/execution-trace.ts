@@ -9,6 +9,7 @@ export type ExecuteBridgePayload = {
   caseId: string;
   inspected: number;
   mapped: number;
+  headlessEnforced?: boolean;
   result: ExecutionResult;
 };
 

@@ -113,6 +113,11 @@ export function BrowserAgentPanel({ caseId }: { caseId: string }) {
       ) : null}
       {phase === "done" && trace && payload ? (
         <div role="status" aria-live="polite">
+          {payload.headlessEnforced === true && showWindow ? (
+            <p className="pf-summary">
+              Ran headless: this runtime has no display, so the browser window request was set aside.
+            </p>
+          ) : null}
           <ul className="pf-trace-list">
             {trace.rows.map((row) => (
               <li key={row.text} className={row.ok ? "is-ok" : "is-bad"}>
