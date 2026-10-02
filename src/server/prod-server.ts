@@ -79,6 +79,17 @@ function serveStatic(pathname: string, res: ServerResponse): void {
 
 let running = false;
 
+// Portal origin for the agent's own browser. Behind a TLS-terminating proxy
+// (Vercel) the public origin is https even though the request arrived as
+// http, so trust x-forwarded-proto when present instead of assuming http.
+function portalBase(req: IncomingMessage): string {
+  const forwarded = String(req.headers["x-forwarded-proto"] ?? "")
+    .split(",")[0]
+    .trim();
+  const protocol = forwarded === "https" || forwarded === "http" ? forwarded : "http";
+  return `${protocol}://${req.headers.host ?? "localhost"}`;
+}
+
 const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
   const url = new URL(req.url ?? "/", `http://${req.headers.host ?? "localhost"}`);
   if (req.method === "GET" && url.pathname === "/api/health") {
@@ -107,7 +118,7 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
       // launched here regardless of what the client requests.
       const outcome = await executeCase(
         body as { caseId?: unknown; headed?: unknown; scenario?: unknown },
-        `http://${req.headers.host ?? "localhost"}`,
+        portalBase(req),
         { allowHeaded: false },
       );
       json(res, outcome.status, outcome.body);

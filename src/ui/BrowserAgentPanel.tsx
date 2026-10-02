@@ -15,7 +15,6 @@ export function BrowserAgentPanel({ caseId }: { caseId: string }) {
   const [phase, setPhase] = useState<Phase>("idle");
   const [payload, setPayload] = useState<ExecuteBridgePayload | null>(null);
   const [failure, setFailure] = useState<string | null>(null);
-  const [showWindow, setShowWindow] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
   async function handleRun() {
@@ -30,7 +29,7 @@ export function BrowserAgentPanel({ caseId }: { caseId: string }) {
       const res = await fetch("/api/execute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ caseId, headed: showWindow }),
+        body: JSON.stringify({ caseId }),
         signal: controller.signal,
       });
       if (res.status === 404) {
@@ -83,16 +82,10 @@ export function BrowserAgentPanel({ caseId }: { caseId: string }) {
                 Cancel
               </button>
             ) : null}
-            <label className="pf-agent-check">
-              <input
-                type="checkbox"
-                checked={showWindow}
-                onChange={(event) => setShowWindow(event.target.checked)}
-                disabled={phase === "running"}
-              />
-              Show the browser window (demo machine only)
-            </label>
           </div>
+          <p className="pf-summary pf-agent-note">
+            Runs a real Chromium on the server. To watch it locally, run the console with `npm run dev`.
+          </p>
         </>
       ) : null}
       {phase === "unavailable" ? (
@@ -113,11 +106,6 @@ export function BrowserAgentPanel({ caseId }: { caseId: string }) {
       ) : null}
       {phase === "done" && trace && payload ? (
         <div role="status" aria-live="polite">
-          {payload.headlessEnforced === true && showWindow ? (
-            <p className="pf-summary">
-              Ran headless: this runtime has no display, so the browser window request was set aside.
-            </p>
-          ) : null}
           <ul className="pf-trace-list">
             {trace.rows.map((row) => (
               <li key={row.text} className={row.ok ? "is-ok" : "is-bad"}>

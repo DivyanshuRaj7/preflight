@@ -53,8 +53,9 @@ export function preflightExecuteBridge(): Plugin {
           res.end(JSON.stringify({ ok: false, stage: "request", error: "Invalid JSON body." }));
           return;
         }
-        // Portal URL comes from the request's own Host header, so the agent
-        // always drives the server the judge is actually viewing.
+        // Portal URL comes from the request's own Host header (and the
+        // forwarded scheme behind a TLS proxy), so the agent always drives
+        // the server the judge is actually viewing.
         const host = req.headers.host;
         if (!host) {
           res.statusCode = 400;
@@ -62,13 +63,16 @@ export function preflightExecuteBridge(): Plugin {
           res.end(JSON.stringify({ ok: false, stage: "request", error: "Missing Host header." }));
           return;
         }
+        const forwarded = String(req.headers["x-forwarded-proto"] ?? "").split(",")[0].trim();
+        const protocol = forwarded === "https" || forwarded === "http" ? forwarded : "http";
+        const base = `${protocol}://${host}`;
         running = true;
         try {
           const outcome = await executeCase(
             body as { caseId?: unknown; headed?: unknown; scenario?: unknown },
-            `http://${host}`,
-            // Dev middleware only: this process is a developer's local machine,
-            // so the "Show the browser window" option may open real Chromium.
+            base,
+            // Dev middleware only: this process runs on a developer's machine,
+            // so a headed request may open real Chromium.
             { allowHeaded: true },
           );
           res.statusCode = outcome.status;
