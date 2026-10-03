@@ -392,20 +392,6 @@ For a reviewer with a few minutes:
 
 No development model is part of the production runtime, and no paid API was required to build, test, or evaluate this project. Live multimodal inference was exercised during development (Gemini and Groq returned validated candidates on the synthetic identity document), but provider availability and rate limiting prevented a reliable full-document benchmark — so **no live model accuracy figure is claimed**.
 
-## Submission Checklist
-
-- [x] Public GitHub repository
-- [x] Production deployment
-- [x] 3-minute demo prepared
-- [x] 10-slide presentation
-- [x] Baseline vs result
-- [x] Own evaluation set
-- [x] Failure trace
-- [x] Human approval boundary
-- [x] Context note
-- [x] AI disclosure
-- [ ] Final demo video URL added
-
 ## Known Limitations
 
 - **CASE-011 consistency boundary.** Uniformly false but internally coherent evidence cannot be detected without an independent source; the full evaluation is 28 / 29, not 29 / 29.
