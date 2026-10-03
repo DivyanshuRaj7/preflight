@@ -6,6 +6,8 @@
 
 Preflight is an evidence-first reliability layer for high-stakes digital applications. It extracts information from supporting documents, validates the resulting application deterministically, operates a synthetic application portal through a browser agent, independently verifies the resulting state, and requires human approval before irreversible submission.
 
+**What:** an evidence-first application compiler. **Why:** a completed form can still be wrong. **How:** documents → validation → browser execution → verification → human approval.
+
 [![React](https://img.shields.io/badge/React-18-61dafb)](package.json)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6)](package.json)
 [![Node.js](https://img.shields.io/badge/Node.js-22-5FA04E)](package.json)
@@ -18,9 +20,17 @@ Preflight is an evidence-first reliability layer for high-stakes digital applica
 
 ## Demo
 
-- **Live app:** _TODO — add the deployed Vercel URL once the production deployment is verified._
-- **Repository:** https://github.com/DivyanshuRaj7/preflight
-- **Demo video:** _TODO — add the hosted video link._
+- **GitHub:** [DivyanshuRaj7/preflight](https://github.com/DivyanshuRaj7/preflight)
+- **Live application:** [preflight-sooty.vercel.app](https://preflight-sooty.vercel.app/)
+- **Demo video:** **TODO:** Add public/unlisted 3-minute demo video URL before submission.
+
+## Context
+
+**Who:** applicants completing high-stakes digital applications.
+
+**Data source:** generated synthetic documents and a locally built synthetic scholarship-renewal portal.
+
+**Objective coverage:** document understanding, cross-document validation, browser execution, failure handling, independent verification, and human-controlled submission.
 
 ## The Problem
 
@@ -281,7 +291,7 @@ The full matrix also covers mapping (`ADV-*`), portal-state (`ADV-008`–`ADV-01
 
 ## Scope
 
-- **Synthetic data only** — no real applicant, document, or credential
+- **Synthetic data only** — no real personal data, no real applicant, document, or credential
 - **Synthetic scholarship renewal application** — the demonstrated domain
 - **Local synthetic portal** — a fictional target application, not a real government or university portal
 - **English-only** demo surface
@@ -357,12 +367,27 @@ npm run test:e2e:headed    # same suite in a visible browser
 
 The console runs entirely on bundled synthetic fixtures. No upload, no credentials, no personal data, no network access.
 
-1. Select a synthetic case in the masthead selector. The demo picker exposes CASE-001 through CASE-006; CASE-007 onward sit in a secondary group.
-2. Choose **CASE-002 · Name mismatch** → **Run Preflight** → `BLOCKED` with the `NAME_MISMATCH` finding and both conflicting names shown as evidence.
-3. Choose **CASE-001 · Clean application** → **Run Preflight** → `READY`, with coverage counts and the explicit approval requirement.
-4. On `READY`, click **Run browser agent** to execute the real Playwright run against the synthetic portal, then **Open Application** to reach `/portal/scholarship-renewal`.
-5. Click **Review verified application** to open the review dialog, and **Approve submission** to exercise the human approval gate.
-6. Click **Evaluation** in the masthead for the measured results.
+Cases available in the demo:
+
+| Case | Scenario | Expected |
+|---|---|---|
+| CASE-001 | clean | `READY` |
+| CASE-002 | name mismatch | `BLOCKED` · `NAME_MISMATCH` |
+| CASE-003 | DOB mismatch | `BLOCKED` · `DOB_MISMATCH` |
+| CASE-004 | missing income certificate | `BLOCKED` · `MISSING_REQUIRED_DOCUMENT` |
+| CASE-005 | expired certificate | `BLOCKED` · `DOCUMENT_EXPIRED` |
+| CASE-006 | low-confidence extraction | `BLOCKED` · `LOW_CONFIDENCE_CRITICAL_FIELD` |
+| CASE-011 | adversarial consistency boundary | `READY` (known boundary — see Evaluation) |
+
+CASE-011 is deliberately kept out of the default demo picker so it is never mistaken for a normal successful case; it stays visible in the Evaluation per-case table.
+
+Walkthrough:
+
+1. Choose **CASE-002 · Name mismatch** → **Run Preflight** → `BLOCKED` with the `NAME_MISMATCH` finding and both conflicting names shown as evidence.
+2. Choose **CASE-001 · Clean application** → **Run Preflight** → `READY`, with coverage counts and the explicit approval requirement.
+3. On `READY`, click **Run browser agent** to execute the real Playwright run against the synthetic portal, then **Open Application** to reach `/portal/scholarship-renewal`.
+4. Click **Review verified application** to open the review dialog, and **Approve submission** to exercise the human approval gate.
+5. Click **Evaluation** in the masthead for the measured results.
 
 Optional: `npm run demo:reset` resets local synthetic demo state, and `npm run demo:browser` runs the same real browser-agent flow in a terminal (`-- --headed` to watch it).
 
@@ -387,11 +412,14 @@ Key documents: [`PRD.md`](PRD.md) · [`ARCHITECTURE.md`](ARCHITECTURE.md) · [`D
 
 ## Deployment
 
-- **Container runtime:** `Dockerfile.vercel` (Vercel auto-detects it at the repository root) and `Dockerfile` for any Docker host. Both use `mcr.microsoft.com/playwright:v1.63.0-noble`, so Chromium and its Linux dependencies ship with the image — no second browser install.
-- **Start command:** `npm start`. The server binds `0.0.0.0` and reads `$PORT`, which Vercel provides.
-- **Production browser execution is headless.** There is no X server on a deployed host; the server enforces headless Chromium unconditionally and ignores any client request for a visible window.
-- **Image size:** roughly 2.8 GB uncompressed, which requires Vercel **Large Functions** (projects created before 2026-06-30 need `VERCEL_SUPPORT_LARGE_FUNCTIONS=1`).
-- **Stateless:** no persistent runtime state, no database. Evaluation artifacts are committed snapshots read at request time; the browser agent drives a fresh page per run.
+**Production:** [preflight-sooty.vercel.app](https://preflight-sooty.vercel.app/)
+
+- **Container runtime.** `Dockerfile.vercel` (auto-detected by Vercel at the repository root) and `Dockerfile` for any Docker host. Both use `mcr.microsoft.com/playwright:v1.63.0-noble`, so Chromium and its Linux dependencies ship inside the image — no second browser install.
+- **Start command.** `npm start`. The server binds `0.0.0.0` and reads `$PORT`, which Vercel provides.
+- **Browser execution is headless in production.** There is no X server on a deployed host, so the server enforces headless Chromium unconditionally and ignores any client request for a visible window.
+- **Evaluation artifacts are committed snapshots** read at request time from `eval/results.json` and `eval/ocr-results.json`. Re-running the harness updates the repository, not the deployment.
+- **Runtime state is not persistent storage.** There is no database and no persisted instance state: the browser agent drives a fresh page per run, and execution is serialized per process (a concurrent `/api/execute` on one instance is refused with HTTP 409).
+- **Image size** is roughly 2.8 GB uncompressed, which requires Vercel **Large Functions** (projects created before 2026-06-30 need `VERCEL_SUPPORT_LARGE_FUNCTIONS=1`).
 - **Static-only hosts cannot run the browser agent.** The console degrades to an explicit unavailable state there instead of pretending.
 
 ## Testing
@@ -411,7 +439,7 @@ The single decision-evaluation miss is the documented CASE-011 consistency bound
 
 For a reviewer with a few minutes:
 
-1. Open the deployed app.
+1. Open the live application: [preflight-sooty.vercel.app](https://preflight-sooty.vercel.app/).
 2. Run **CASE-002** → `BLOCKED`, applicant name mismatch, both values shown as evidence.
 3. Run **CASE-001** → `READY`, no blocking issues.
 4. Click **Open Application** → the synthetic scholarship portal.
@@ -423,16 +451,34 @@ For a reviewer with a few minutes:
 
 ## AI Tool Disclosure
 
+> **AI APIs optional; the bundled synthetic demo/evaluation does not require a paid external AI API.**
+
 ### Runtime AI / ML
 
-- **PaddleOCR 3.7** — real local OCR over the synthetic document images, CPU-only, no API key
-- **Configurable semantic model providers** — OpenRouter, Google Gemini, and Groq implement the same untrusted-evidence contract. Demo Mode, the E2E suite, and the entire evaluation set run on the deterministic provider and require **no** API keys. Live multimodal inference was exercised during development (Gemini and Groq returned validated candidates on the synthetic identity document), but provider availability and rate limiting prevented a reliable full-document benchmark, so **no live model accuracy figure is claimed**.
+- **PaddleOCR 3.7** for OCR and document evidence extraction (local, CPU-only, no API key)
+- **Configurable semantic model providers** — OpenRouter, Google Gemini, and Groq implement the same untrusted-evidence contract for ambiguous document/field interpretation *where enabled*; the bundled demo, the E2E suite, and the whole evaluation set run on the deterministic provider
+- **Deterministic TypeScript validation** for correctness-critical decisions
+- **Playwright + Chromium** for browser operation and verification
 
 ### Development Tools
 
-- **OpenCode** with the **Muse Spark 1.3** model was used for AI-assisted implementation during the challenge.
+- **OpenCode**, with the **Muse Spark 1.3** model, was used for AI-assisted implementation during the challenge
 
-No development model was part of the production runtime, and no paid API was required to build, test, or evaluate this project.
+No development model is part of the production runtime, and no paid API was required to build, test, or evaluate this project. Live multimodal inference was exercised during development (Gemini and Groq returned validated candidates on the synthetic identity document), but provider availability and rate limiting prevented a reliable full-document benchmark — so **no live model accuracy figure is claimed**.
+
+## Submission Checklist
+
+- [x] Public GitHub repository
+- [x] Production deployment
+- [x] 3-minute demo prepared
+- [x] 10-slide presentation
+- [x] Baseline vs result
+- [x] Own evaluation set
+- [x] Failure trace
+- [x] Human approval boundary
+- [x] Context note
+- [x] AI disclosure
+- [ ] Final demo video URL added
 
 ## Known Limitations
 
