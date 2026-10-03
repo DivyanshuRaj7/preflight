@@ -9,6 +9,7 @@ import { ApprovalPanel } from "./ApprovalPanel.js";
 import { FindingList, type EvidenceSelection } from "./FindingList.js";
 import { EvidencePanel } from "./EvidencePanel.js";
 import { DocumentList } from "./DocumentList.js";
+import { EvaluationPanel } from "./EvaluationPanel.js";
 
 type Theme = "light" | "dark";
 
@@ -39,6 +40,7 @@ function initialTheme(): Theme {
 // pipeline in pipeline.ts.
 export function App() {
   const [theme, setTheme] = useState<Theme>(initialTheme);
+  const [view, setView] = useState<"workspace" | "evaluation">("workspace");
   const [selectedId, setSelectedId] = useState(CASES[0].id);
   const [run, setRun] = useState<PreflightRun | null>(null);
   const [running, setRunning] = useState(false);
@@ -96,6 +98,14 @@ export function App() {
           <span className="pf-wordmark-sub">The Application Compiler</span>
         </span>
         <div className="pf-topbar-right">
+          <button
+            type="button"
+            className="pf-topbar-link"
+            aria-pressed={view === "evaluation"}
+            onClick={() => setView(view === "evaluation" ? "workspace" : "evaluation")}
+          >
+            Evaluation
+          </button>
           <span className="pf-synth-pill" translate="no">
             SYNTHETIC
           </span>
@@ -112,6 +122,10 @@ export function App() {
         </div>
       </div>
       <main className="pf-main" id="workspace">
+        {view === "evaluation" ? (
+          <EvaluationPanel />
+        ) : (
+          <>
         <WorkspaceHeader selectedId={selectedId} running={running} onSelect={selectCase} onRun={handleRun} />
         {running ? (
           <div className="pf-skeleton" aria-busy="true" aria-label="Validation running">
@@ -157,6 +171,8 @@ export function App() {
             {run.decision.status === "READY" ? <ApprovalPanel run={run} /> : null}
           </>
         ) : null}
+          </>
+        )}
         <footer className="pf-footer">
           <p>
             AI for ambiguity. Code for correctness. · Synthetic data only — this interface never submits anything.

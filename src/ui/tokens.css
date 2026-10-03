@@ -563,6 +563,70 @@ section { scroll-margin-top: 16px; }
 
 /* ---------- Browser agent execution trace ---------- */
 
+/* ---------- Evaluation console ---------- */
+
+.pf-topbar-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  background: transparent;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 160ms ease-out, color 160ms ease-out, border-color 160ms ease-out;
+}
+.pf-topbar-link:hover { background: var(--surface-2); color: var(--ink); border-color: var(--hairline-strong); }
+.pf-topbar-link[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--canvas); }
+
+.pf-eval { margin-top: 8px; }
+.pf-eval-title { font-size: 30px; font-weight: 650; letter-spacing: -0.022em; line-height: 1.15; margin: 0; }
+.pf-eval-tagline { margin: 6px 0 0; font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.1em; color: var(--awaiting); }
+.pf-eval-lede { margin: 12px 0 0; font-size: 14.5px; color: var(--ink-muted); max-width: 68ch; }
+
+.pf-eval-primary { margin: 28px 0 0; padding: 20px 0 18px; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+.pf-eval-big { margin: 0; font-size: 54px; font-weight: 650; letter-spacing: -0.03em; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+.pf-eval-slash { color: var(--ink-faint); font-weight: 500; }
+.pf-eval-big-label { margin: 8px 0 0; font-size: 14px; color: var(--ink-muted); }
+
+.pf-eval-grid { margin: 24px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.pf-eval-grid > div { min-width: 0; }
+.pf-eval-grid dt { font-size: 12.5px; color: var(--ink-subtle); }
+.pf-eval-grid dd { margin: 6px 0 0; font-size: 26px; font-weight: 650; letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.pf-eval-grid p { margin: 4px 0 0; font-size: 12.5px; color: var(--ink-faint); }
+
+.pf-eval-secondary { margin: 32px 0 0; padding-top: 20px; border-top: 1px solid var(--hairline); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; }
+.pf-eval-secondary-value { margin: 0; font-size: 22px; font-weight: 650; letter-spacing: -0.015em; font-variant-numeric: tabular-nums; }
+.pf-eval-secondary-label { margin: 4px 0 0; font-size: 13.5px; font-weight: 600; }
+.pf-eval-secondary-note { margin: 2px 0 0; font-size: 12.5px; color: var(--ink-faint); }
+
+.pf-eval-boundary { margin: 28px 0 0; padding: 16px 18px; border: 1px solid var(--hairline); border-left: 3px solid var(--awaiting); border-radius: 0 var(--radius-md) var(--radius-md) 0; background: var(--surface-1); }
+.pf-eval-boundary-title { margin: 0 0 6px; font-family: var(--font-mono); font-size: 12.5px; color: var(--ink); }
+.pf-eval-boundary p:last-child { margin: 0; font-size: 13.5px; color: var(--ink-muted); max-width: 76ch; }
+
+.pf-eval-cases { margin: 28px 0 0; }
+.pf-eval-table-wrap { margin-top: 14px; overflow-x: auto; border: 1px solid var(--hairline); border-radius: var(--radius-md); }
+.pf-eval-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.pf-eval-caption { padding: 10px 14px; text-align: left; font-size: 12px; color: var(--ink-subtle); border-bottom: 1px solid var(--hairline); }
+.pf-eval-table th, .pf-eval-table td { padding: 8px 14px; text-align: left; border-bottom: 1px solid var(--hairline); white-space: nowrap; }
+.pf-eval-table thead th { font-size: 11px; letter-spacing: 0.08em; color: var(--ink-subtle); font-weight: 600; }
+.pf-eval-table tbody tr:last-child th, .pf-eval-table tbody tr:last-child td { border-bottom: none; }
+.pf-eval-table .mono { font-family: var(--font-mono); }
+.pf-eval-pass { color: var(--ready); }
+.pf-eval-boundary-cell { color: var(--awaiting); }
+.pf-eval-table tr.is-boundary { background: var(--surface-2); }
+
+@media (max-width: 1023px) {
+  .pf-eval-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+  .pf-eval-big { font-size: 40px; }
+  .pf-eval-grid, .pf-eval-secondary { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------- Browser agent execution trace ---------- */
+
 .pf-agent { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--hairline); }
 .pf-agent-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
 .pf-agent-check { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-muted); cursor: pointer; }

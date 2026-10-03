@@ -1,0 +1,13 @@
+{
+  "generatedBy": "npm run eval:ocr",
+  "provider": "paddleocr",
+  "documents": {
+    "processed": 4,
+    "succeededOrPartial": 4,
+    "lowConfidence": 0,
+    "failed": 0
+  },
+  "passed": 4,
+  "total": 4,
+  "failedDocuments": []
+}

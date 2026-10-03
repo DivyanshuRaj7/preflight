@@ -2,6 +2,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import { readFileSync, statSync } from "node:fs";
 import { join, normalize, extname } from "node:path";
 import { executeCase } from "./execute-service.js";
+import { loadEvaluationSummary } from "./evaluation-service.js";
 
 // Production runtime: serves the built console + synthetic portal and hosts
 // the SAME execution service as the dev bridge (no second engine, no mocks).
@@ -94,6 +95,15 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
   const url = new URL(req.url ?? "/", `http://${req.headers.host ?? "localhost"}`);
   if (req.method === "GET" && url.pathname === "/api/health") {
     json(res, 200, { ok: true, service: "preflight", bridge: true });
+    return;
+  }
+  if (req.method === "GET" && url.pathname === "/api/evaluation") {
+    const summary = loadEvaluationSummary();
+    if (!summary) {
+      json(res, 503, { ok: false, error: "Evaluation artifact unavailable. Run npm run eval." });
+      return;
+    }
+    json(res, 200, summary);
     return;
   }
   if (url.pathname === "/api/execute") {

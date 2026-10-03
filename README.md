@@ -87,6 +87,17 @@ Human Review → Approval → SUBMITTED → VERIFIED
 
 See [docs/DEMO.md](docs/DEMO.md) for the fixed 3-minute sequence.
 
+## Evaluation console
+
+The masthead has an **Evaluation** control that opens a read-only view of the
+measured results: standard correctness, the naive baseline, unsafe
+continuations prevented, safety probes denied, unauthorized submissions, the
+full-set result including the CASE-011 boundary, the OCR run, and per-case
+rows. Every number is derived from `eval/results.json` (`npm run eval`) and
+`eval/ocr-results.json` (`npm run eval:ocr`) through the harness's own
+`computeMetrics`; the UI restates nothing. If an artifact is missing the
+console says so instead of showing numbers.
+
 ## Project rules
 
 - Synthetic/generated data only.
@@ -238,6 +249,7 @@ npm start
 Endpoints:
 
 - `GET /api/health`
+- `GET /api/evaluation` — measured evaluation results, read from the harness artifact
 - `POST /api/execute`
 
 Notes and limits:

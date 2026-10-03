@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { PaddleOcrProvider } from "../src/adapters/ocr/paddleocr.js";
@@ -64,3 +64,22 @@ if (failures.length > 0) {
   console.error(`OCR harness failed for: ${failures.join(", ")}`);
   process.exit(1);
 }
+
+// Machine-readable mirror of the numbers printed above, so the evaluation
+// console reads measured output instead of restating it. Written only on a
+// clean run; evaluation semantics are untouched.
+await writeFile(
+  path.join(root, "eval/ocr-results.json"),
+  `${JSON.stringify(
+    {
+      generatedBy: "npm run eval:ocr",
+      provider: "paddleocr",
+      documents: { processed, succeededOrPartial: succeeded, lowConfidence, failed },
+      passed: succeeded,
+      total: processed,
+      failedDocuments: failures,
+    },
+    null,
+    2,
+  )}\n`,
+);

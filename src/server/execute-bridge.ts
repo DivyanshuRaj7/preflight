@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Plugin } from "vite";
 import { executeCase } from "./execute-service.js";
+import { loadEvaluationSummary } from "./evaluation-service.js";
 
 // Dev-only runtime bridge: POST /api/execute delegates to the shared
 // execution service. Dev only (`apply: "serve"`) — see prod-server.ts for the
@@ -31,6 +32,17 @@ export function preflightExecuteBridge(): Plugin {
     name: "preflight-execute-bridge",
     apply: "serve",
     configureServer(server) {
+      server.middlewares.use("/api/evaluation", (req: IncomingMessage, res: ServerResponse) => {
+        const summary = loadEvaluationSummary();
+        res.setHeader("Content-Type", "application/json");
+        if (!summary) {
+          res.statusCode = 503;
+          res.end(JSON.stringify({ ok: false, error: "Evaluation artifact unavailable. Run npm run eval." }));
+          return;
+        }
+        res.statusCode = 200;
+        res.end(JSON.stringify(summary));
+      });
       server.middlewares.use("/api/execute", async (req: IncomingMessage, res: ServerResponse) => {
         if (req.method !== "POST") {
           res.statusCode = 405;
